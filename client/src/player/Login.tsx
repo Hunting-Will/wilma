@@ -20,16 +20,16 @@ export function Login() {
   }
   return (
     <InfoContainer>
-      <Typography variant="h3">Welcome to THE GAME</Typography>
+      <Typography variant="h3">Hunting Will</Typography>
       <Box
         flexDirection="column"
         display="flex"
         justifyContent="space-between"
         alignItems="center"
       >
-        <TextField id="Nickname" label="nickname" variant="standard" value={nickname} onChange={(e) => setNickname(e.target.value)} />
-        <TextField id="GameID" label="Game ID" variant="standard" value={gameId} onChange={(e) => setGameId(e.target.value)} />
-        <Button variant="contained" onClick={handleJoin}>Join</Button>
+        <TextField id="Nickname" label="Nickname" sx={{ m: 1 }} variant="standard" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+        <TextField id="GameID" label="Game ID" sx={{ m: 1 }} variant="standard" value={gameId} onChange={(e) => setGameId(e.target.value)} />
+        <Button disabled={!nickname || !gameId} variant="contained" onClick={handleJoin} sx={{ m: 2 }}>Join</Button>
       </Box>
     </InfoContainer >
   );

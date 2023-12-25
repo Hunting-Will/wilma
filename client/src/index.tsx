@@ -1,3 +1,8 @@
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {
@@ -6,18 +11,29 @@ import {
 } from "react-router-dom";
 
 import './index.css';
-import App from './App';
-import { Game } from './player/Game'
+// import App from './App';
+import { SubGame } from './player/SubGame'
 import reportWebVitals from './reportWebVitals';
+import { MainGame } from './main/MainGame';
+import { Create } from './main/Create';
+import { Login } from './player/Login';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Create />,
+  },
+  {
+    path: "/join",
+    element: <Login />,
   },
   {
     path: "/sub/:id",
-    element: <Game />,
+    element: <SubGame />,
+  },
+  {
+    path: "/main/:id",
+    element: <MainGame />,
   },
 ]);
 

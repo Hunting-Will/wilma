@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 import Box from "@mui/material/Box";
 
-export function Game() {
+export function SubGame() {
     const { id } = useParams();
     const playerId = localStorage.getItem('playerId')
 

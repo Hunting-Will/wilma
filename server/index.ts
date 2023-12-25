@@ -31,29 +31,29 @@ function generateGameCode() {
   return result;
 }
 
-router.get('/createGame/:lobbyId', async (ctx) => {
-  const { lobbyId } = ctx.params;
+router.get('/createGame/:name', async (ctx) => {
+  const { name } = ctx.params;
 
-  if (!lobbyId) {
+  if (!name) {
     ctx.status = 400;
-    ctx.body = { error: 'Lobby name is required' };
+    ctx.body = { error: 'Name is required' };
     return;
   }
 
-  const gameCode = generateGameCode();
+  const gameId = generateGameCode();
   const gameData: Game = {
-    key: gameCode,
+    key: gameId,
     players: [],
     data: {}
   };
 
-  await redis.set(gameCode, JSON.stringify(gameData));
+  await redis.set(gameId, JSON.stringify(gameData));
 
   ctx.status = 200;
   ctx.body = {
     message: 'Game created successfully',
-    lobbyName: lobbyId,
-    gameCode: gameCode
+    name,
+    gameId
   };
 });
 
@@ -82,10 +82,10 @@ router.get('/joinGame/:lobbyId/:playerName', async (ctx) => {
   }
 });
 
-router.get('/game/:lobbyId', async (ctx) => {
-  const { lobbyId, playerName } = ctx.params;
+router.get('/game/:id', async (ctx) => {
+  const { id } = ctx.params;
 
-  const gameData = await redis.get(lobbyId);
+  const gameData = await redis.get(id);
 
   if (gameData) {
     ctx.body = gameData;
