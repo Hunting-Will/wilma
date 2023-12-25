@@ -3,9 +3,11 @@ import Router from '@koa/router';
 import bodypareser from 'koa-bodyparser';
 import cors from '@koa/cors'
 
+import {RealtimeServer} from './realtime-server/RealtimeServer';
 import { GameController } from '../game-logic/GameController';
 import { getGame, setGame } from './gamesManager'
 import { GameAction, GridCell } from '../types';
+
 const { v4: uuidv4 } = require('uuid');
 
 const router = new Router({ prefix: '/api' });
@@ -57,10 +59,10 @@ router.get('/joinGame/:key/:nickname', async (ctx) => {
   game.AddPlayer(player)
 
   await setGame(key, game)
+  RealtimeServer.EmitGameState(key, game);
 
   ctx.status = 200
   ctx.body = { playerId: player.ID }
-
 });
 
 router.get('/game/:key', async (ctx) => {
@@ -81,6 +83,7 @@ router.post('/game/:key/simulateTurn', async (ctx) => {
 
   const game = await getGame(key)
   game.SimulateTurn()
+  RealtimeServer.EmitGameState(key, game);
 });
 
 router.post('/game/:key/setAction', async (ctx) => {
@@ -90,6 +93,7 @@ router.post('/game/:key/setAction', async (ctx) => {
   const game = await getGame(key)
   const player = game.players.find(({ ID }) => ID === playerId)
   game.SetPlayerAction(player, action, cellId)
+  RealtimeServer.EmitGameState(key, game);
 });
 
 app
@@ -101,5 +105,5 @@ app.on('error', (err, ctx) => {
 });
 
 const port = 3001
-app.listen(port);
+app.listen(port, "0.0.0.0");
 console.log(`Starting server on ${port}`)

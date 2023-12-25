@@ -20,25 +20,32 @@ export function SubGame() {
 
     const [actions, setAction] = useState(['Seed', 'Harvest'])
 
-    const { id } = useParams();
-    const playerId = localStorage.getItem('playerId')
+  const { id } = useParams();
+  const playerId = localStorage.getItem("playerId");
 
-    if (!id) {
-        throw new Error('No id')
-    }
+  if (!id) {
+    throw new Error("No id");
+  }
 
-    console.log(game)
+  console.log(game);
 
-    useEffect(() => {
-        const init = async () => {
-            const game = await fetchGame(id);
-            setGame(game)
-
-            const player = game.players.find(({ ID }) => ID === playerId)
-            setPlayer(player)
+  useEffect(() => {
+    const init = async () => {
+      const game = await fetchGame(id);
+      setGame(game);
+      const ws = new WebSocket(`ws://localhost:8080?gameID=${game.key}`);
+      ws.addEventListener("message", (m) => {
+        const parsed = JSON.parse(m.data);
+        if (parsed.type == "GameState") {
+          console.log(parsed);
         }
-        init()
-    }, [])
+      });
+
+      const player = game.players.find(({ ID }) => ID === playerId);
+      setPlayer(player);
+    };
+    init();
+  }, []);
 
     const handleSetAction = (action: string) => {
         alert(action)
