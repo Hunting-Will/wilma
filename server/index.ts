@@ -2,12 +2,16 @@ import Koa from 'koa'
 import Router from '@koa/router';
 import bodypareser from 'koa-bodyparser';
 import Redis from 'ioredis'
+import cors from '@koa/cors'
+
 import { Game } from '../types';
 const { v4: uuidv4 } = require('uuid');
 
-const app = new Koa();
 const router = new Router({ prefix: '/api' });
 const redis = new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
+
+const app = new Koa();
+app.use(cors())
 app.use(bodypareser())
 
 app.use(async (ctx, next) => {
@@ -123,5 +127,6 @@ app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 });
 
-app.listen(3000);
-console.log("Starting server on 3000")
+const port = 3001
+app.listen(port);
+console.log(`Starting server on ${port}`)
