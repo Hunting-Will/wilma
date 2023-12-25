@@ -5,16 +5,25 @@ import Box from "@mui/material/Box";
 import { Container, Typography } from '@mui/material';
 import { InfoContainer } from '../global-ui/InfoContainer';
 import { fetchGame } from '../serverClient';
+import { Game } from '../../../types';
+import { Board } from './Board';
 
 export function MainGame() {
+    const [game, setGame] = useState<Game>();
+
     const { id } = useParams();
     const playerId = localStorage.getItem('playerId')
 
-    useEffect(() => {
-        (async () => {
-            id && console.log(await fetchGame(id))
-        })()
+    if (!id) {
+        throw new Error('No id')
+    }
 
+    useEffect(() => {
+        const init = async () => {
+            setGame(await fetchGame(id))
+        }
+
+        init()
     }, [id])
     return (
         <Container>
@@ -31,6 +40,7 @@ export function MainGame() {
 
                 </InfoContainer>
                 Player id: {playerId}
+                {game && <Board game={game} />}
             </Box>
         </Container>
     );
