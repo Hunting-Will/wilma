@@ -65,8 +65,8 @@ router.get('/joinGame/:lobbyId/:playerName', async (ctx) => {
     const gameData = await redis.get(lobbyId);
 
     if (gameData) {
-      const parsedData = JSON.parse(gameData);
-      parsedData.players.push({ id: playerId, name: playerName });
+      const parsedData = JSON.parse(gameData) as Game;
+      parsedData.players.push({ ID: playerId, Nickname: playerName });
       await redis.set(lobbyId, JSON.stringify(parsedData));
 
       ctx.status = 200;

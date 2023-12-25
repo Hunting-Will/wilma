@@ -1,6 +1,6 @@
 export type Game = {
     key: string;
-    players: string[];
+    players: Player[];
     data: Record<any, any>;
 }
 
@@ -11,7 +11,7 @@ export type Player = {
 
 export type PlayerAction = {
     player: Player,
-    action: GameAction 
+    action: GameAction
 }
 
 export type TurnResults = {

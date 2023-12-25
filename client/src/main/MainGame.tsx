@@ -12,10 +12,10 @@ export function MainGame() {
 
     useEffect(() => {
         (async () => {
-            await fetchGame('id')
+            id && console.log(await fetchGame(id))
         })()
 
-    }, [])
+    }, [id])
     return (
         <Container>
             <Box
