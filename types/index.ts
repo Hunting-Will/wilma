@@ -6,7 +6,8 @@ export type Game = {
 
 export type Player = {
     ID: string,
-    Nickname: string
+    Nickname: string,
+    Score: number,
 }
 
 export type PlayerAction = {

@@ -6,11 +6,11 @@ function UUID(){
     return "very safe"+Math.random();
 }
 
-export class GameRunner{
+export class GridController{
     private grid: GridCell[]
 
     constructor(gridLength: number, gridWidth: number){
-        this.grid = [...Array(gridLength * gridWidth).keys()].map(GameRunner.CreateEmptyCell);
+        this.grid = [...Array(gridLength * gridWidth).keys()].map(GridController.CreateEmptyCell);
     }
 
     static CreateEmptyCell():GridCell{
