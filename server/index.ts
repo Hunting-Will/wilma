@@ -69,7 +69,6 @@ router.get('/joinGame/:key/:nickname', async (ctx) => {
 router.get('/game/:id', async (ctx) => {
   const { id } = ctx.params;
 
-  // const gameData = games[id]
   const game = await redis.get(id)
 
   if (game) {
@@ -80,29 +79,6 @@ router.get('/game/:id', async (ctx) => {
   }
 });
 
-// router.post('/saveGame/:lobbyId', async (ctx) => {
-//   const lobbyId = ctx.params.lobbyId;
-//   const newGameData = ctx.request.body;
-
-//   try {
-//     const gameData = await redis.get(lobbyId);
-
-//     if (gameData) {
-//       const parsedData = JSON.parse(gameData);
-//       parsedData.data = newGameData;
-//       await redis.set(lobbyId, JSON.stringify(parsedData));
-//       ctx.status = 200;
-//       ctx.body = { message: 'Game data updated successfully' };
-//     } else {
-//       ctx.status = 404;
-//       ctx.body = { error: 'Game not found' };
-//     }
-//   } catch (error) {
-//     console.error('Redis error:', error);
-//     ctx.status = 500;
-//     ctx.body = { error: 'Internal server error' };
-//   }
-// });
 
 app
   .use(router.routes())

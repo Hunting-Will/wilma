@@ -17,6 +17,7 @@ export function MainGame() {
     if (!id) {
         throw new Error('No id')
     }
+    console.log(game)
 
     useEffect(() => {
         const init = async () => {
