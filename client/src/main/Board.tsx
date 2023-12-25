@@ -18,13 +18,11 @@ export function Board({ game }: { game: Game }) {
     const columns = new Array(n).fill(null);
 
     return (
-        <Box flexDirection="column"
-            display="flex"
-        >
+        <Box flexDirection="column" display="flex">
             {rows.map((_, rowIndex) => (
                 <Box key={rowIndex} display="flex">
                     {columns.map((_, columnIndex) => (
-                        <Tile />
+                        <Tile key={columnIndex} />
                     ))}
                 </Box>
             ))}

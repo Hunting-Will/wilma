@@ -13,7 +13,7 @@ function generateGameCode() {
 export class GameController {
 
     private gc: GridController;
-    private players: Player[];
+    public players: Player[];
     public key: string;
 
     constructor(gridLength: number, gridWidth: number) {

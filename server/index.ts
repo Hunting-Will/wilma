@@ -1,14 +1,14 @@
 import Koa from 'koa'
 import Router from '@koa/router';
 import bodypareser from 'koa-bodyparser';
-import Redis from 'ioredis'
 import cors from '@koa/cors'
 
 import { GameController } from '../game-logic/GameController';
+import { getGame, setGame } from './gamesManager'
+import { GameAction, GridCell } from '../types';
 const { v4: uuidv4 } = require('uuid');
 
 const router = new Router({ prefix: '/api' });
-const redis = new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
 
 const app = new Koa();
 app.use(cors())
@@ -22,7 +22,6 @@ app.use(async (ctx, next) => {
   await next();
 });
 
-let games: Record<GameController['key'], GameController> = {};
 
 router.get('/createGame/:name', async (ctx) => {
   const { name } = ctx.params;
@@ -33,15 +32,15 @@ router.get('/createGame/:name', async (ctx) => {
     return;
   }
 
-  const gameController = new GameController(3, 3)
+  const game = new GameController(3, 3)
 
-  await redis.set(gameController.key, JSON.stringify(gameController));
+  setGame(game.key, game);
 
   ctx.status = 200;
   ctx.body = {
     message: 'Game created successfully',
     name,
-    gameId: gameController.key
+    gameId: game.key
   };
 });
 
@@ -54,22 +53,20 @@ router.get('/joinGame/:key/:nickname', async (ctx) => {
     Score: 0
   }
 
-  const game = await redis.get(key)
+  const game = await getGame(key)
+  game.AddPlayer(player)
 
-  const gameController = Object.assign(new GameController(3, 3), JSON.parse(game))
-  gameController.AddPlayer(player)
-
-  await redis.set(key, JSON.stringify(gameController))
+  await setGame(key, game)
 
   ctx.status = 200
   ctx.body = { playerId: player.ID }
 
 });
 
-router.get('/game/:id', async (ctx) => {
-  const { id } = ctx.params;
+router.get('/game/:key', async (ctx) => {
+  const { key } = ctx.params;
 
-  const game = await redis.get(id)
+  const game = await getGame(key)
 
   if (game) {
     ctx.body = game;
@@ -79,6 +76,21 @@ router.get('/game/:id', async (ctx) => {
   }
 });
 
+router.post('/game/:key/simulateTurn', async (ctx) => {
+  const { key } = ctx.params;
+
+  const game = await getGame(key)
+  game.SimulateTurn()
+});
+
+router.post('/game/:key/setAction', async (ctx) => {
+  const { key } = ctx.params;
+  const { action, playerId, cellId } = ctx.request.body as { action: GameAction, playerId: string, cellId: GridCell['ID'] };
+
+  const game = await getGame(key)
+  const player = game.players.find(({ ID }) => ID === playerId)
+  game.SetPlayerAction(player, action, cellId)
+});
 
 app
   .use(router.routes())
