@@ -1,10 +1,11 @@
 import Koa from 'koa'
 import Router from '@koa/router';
 // import bodypareser from 'koa-bodyparser';
-import redis from 'ioredis'
+import Redis from 'ioredis'
 
 const app = new Koa();
 const router = new Router({ prefix: '/api' });
+const redis = new Redis();
 
 function generateGameCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
