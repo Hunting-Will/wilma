@@ -7,7 +7,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const app = new Koa();
 const router = new Router({ prefix: '/api' });
-const redis = new Redis();
+const redis = new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
 app.use(bodypareser())
 
 app.use(async (ctx, next) => {
@@ -75,6 +75,19 @@ router.get('/joinGame/:lobbyId/:playerName', async (ctx) => {
     console.error('Redis error:', error);
     ctx.status = 500;
     ctx.body = { error: 'Failed to join game' };
+  }
+});
+
+router.get('/game/:lobbyId', async (ctx) => {
+  const { lobbyId, playerName } = ctx.params;
+
+  const gameData = await redis.get(lobbyId);
+
+  if (gameData) {
+    ctx.body = gameData;
+  } else {
+    ctx.status = 404;
+    ctx.body = { error: 'Game not found' };
   }
 });
 
