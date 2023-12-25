@@ -1,19 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
 import Box from "@mui/material/Box";
 import { fetchGame } from '../serverClient';
 import type { Game, Player, GameAction } from '../../../types/';
 
-const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-    height: 100
+const Item = styled('div')(({ theme }) => ({
+    height: 100,
+    width: 100,
+    margin: 20,
+    padding: 10,
+    border: "1px solid lightgray"
 }));
 
 
@@ -43,6 +40,9 @@ export function SubGame() {
         init()
     }, [])
 
+    const handleSetAction = (action: string) => {
+        alert(action)
+    }
     return (
         <Box
             display="flex"
@@ -60,13 +60,11 @@ export function SubGame() {
                 <Box>
                     Game {id}, Player {JSON.stringify(player)}
                 </Box>
-                <Grid container spacing={2}>
+                <Box display="flex" justifyContent="center">
                     {actions.map((action) =>
-                        <Grid item xs={4}>
-                            <Item>{action}</Item>
-                        </Grid>
+                        <Item onClick={() => handleSetAction(action)}>{action}</Item>
                     )}
-                </Grid>
+                </Box>
             </Box>
         </Box>
     );

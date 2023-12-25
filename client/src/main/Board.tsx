@@ -5,7 +5,8 @@ import { styled } from '@mui/system';
 
 const Tile = styled('div')({
     backgroundColor: 'lightblue',
-    padding: '40px',
+    width: 200,
+    height: 200,
     borderRadius: '8px',
     margin: 5
 });

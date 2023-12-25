@@ -7,6 +7,8 @@ import { InfoContainer } from '../global-ui/InfoContainer';
 import { fetchGame } from '../serverClient';
 import { Game } from '../../../types';
 import { Board } from './Board';
+import { Left } from './Left';
+import { Right } from './Right';
 
 export function MainGame() {
     const [game, setGame] = useState<Game>();
@@ -27,7 +29,8 @@ export function MainGame() {
         init()
     }, [id])
     return (
-        <Container>
+        <Box display="flex" justifyContent="space-around">
+            {game && <Left game={game} />}
             <Box
                 flexDirection="column"
                 display="flex"
@@ -43,6 +46,7 @@ export function MainGame() {
                 Player id: {playerId}
                 {game && <Board game={game} />}
             </Box>
-        </Container>
+            {game && <Right game={game} />}
+        </Box>
     );
 }
