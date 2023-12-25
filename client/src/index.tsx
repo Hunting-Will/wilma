@@ -11,7 +11,6 @@ import {
 } from "react-router-dom";
 
 import './index.css';
-// import App from './App';
 import { SubGame } from './player/SubGame'
 import reportWebVitals from './reportWebVitals';
 import { MainGame } from './main/MainGame';

@@ -16,6 +16,7 @@ export function SubGame() {
         throw new Error('No id')
     }
 
+    console.log(game)
 
     useEffect(() => {
         const init = async () => {
@@ -26,7 +27,7 @@ export function SubGame() {
             setPlayer(player)
         }
         init()
-    })
+    }, [])
 
     return (
 

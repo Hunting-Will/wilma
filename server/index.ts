@@ -4,7 +4,7 @@ import bodypareser from 'koa-bodyparser';
 import Redis from 'ioredis'
 import cors from '@koa/cors'
 
-import { Game } from '../types';
+import { GameController } from '../game-logic/GameController';
 const { v4: uuidv4 } = require('uuid');
 
 const router = new Router({ prefix: '/api' });
@@ -19,17 +19,10 @@ app.use(async (ctx, next) => {
   if (ctx.method === 'POST' || ctx.method === 'PUT') {
     console.log('Body:', ctx.request.body);
   }
-  await next(); // Pass control to the next middleware
+  await next();
 });
 
-function generateGameCode() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-  let result = '';
-  for (let i = 0; i < 5; i++) {
-    result += characters.charAt(Math.floor(Math.random() * characters.length));
-  }
-  return result;
-}
+let games: Record<GameController['key'], GameController> = {};
 
 router.get('/createGame/:name', async (ctx) => {
   const { name } = ctx.params;
@@ -40,84 +33,76 @@ router.get('/createGame/:name', async (ctx) => {
     return;
   }
 
-  const gameId = generateGameCode();
-  const gameData: Game = {
-    key: gameId,
-    players: [],
-    data: {}
-  };
+  const gameController = new GameController(3, 3)
 
-  await redis.set(gameId, JSON.stringify(gameData));
+  await redis.set(gameController.key, JSON.stringify(gameController));
 
   ctx.status = 200;
   ctx.body = {
     message: 'Game created successfully',
     name,
-    gameId
+    gameId: gameController.key
   };
 });
 
-router.get('/joinGame/:lobbyId/:playerName', async (ctx) => {
-  const { lobbyId, playerName } = ctx.params;
-  const playerId = uuidv4();
+router.get('/joinGame/:key/:nickname', async (ctx) => {
+  const { key, nickname } = ctx.params;
 
-  try {
-    const gameData = await redis.get(lobbyId);
-
-    if (gameData) {
-      const parsedData = JSON.parse(gameData) as Game;
-      parsedData.players.push({ ID: playerId, Nickname: playerName });
-      await redis.set(lobbyId, JSON.stringify(parsedData));
-
-      ctx.status = 200;
-      ctx.body = { playerId: playerId };
-    } else {
-      ctx.status = 404;
-      ctx.body = { error: 'Game not found' };
-    }
-  } catch (error) {
-    console.error('Redis error:', error);
-    ctx.status = 500;
-    ctx.body = { error: 'Failed to join game' };
+  const player = {
+    ID: uuidv4(),
+    Nickname: nickname,
+    Score: 0
   }
+
+  const game = await redis.get(key)
+
+  const gameController = Object.assign(new GameController(3, 3), JSON.parse(game))
+  gameController.AddPlayer(player)
+
+  await redis.set(key, JSON.stringify(gameController))
+
+  ctx.status = 200
+  ctx.body = { playerId: player.ID }
+
 });
 
 router.get('/game/:id', async (ctx) => {
   const { id } = ctx.params;
 
-  const gameData = await redis.get(id);
+  // const gameData = games[id]
+  const game = await redis.get(id)
 
-  if (gameData) {
-    ctx.body = gameData;
+  if (game) {
+    ctx.body = game;
   } else {
     ctx.status = 404;
     ctx.body = { error: 'Game not found' };
   }
 });
 
-router.post('/saveGame/:lobbyId', async (ctx) => {
-  const lobbyId = ctx.params.lobbyId;
-  const newGameData = ctx.request.body;
+// router.post('/saveGame/:lobbyId', async (ctx) => {
+//   const lobbyId = ctx.params.lobbyId;
+//   const newGameData = ctx.request.body;
 
-  try {
-    const gameData = await redis.get(lobbyId);
+//   try {
+//     const gameData = await redis.get(lobbyId);
 
-    if (gameData) {
-      const parsedData = JSON.parse(gameData);
-      parsedData.data = newGameData;
-      await redis.set(lobbyId, JSON.stringify(parsedData));
-      ctx.status = 200;
-      ctx.body = { message: 'Game data updated successfully' };
-    } else {
-      ctx.status = 404;
-      ctx.body = { error: 'Game not found' };
-    }
-  } catch (error) {
-    console.error('Redis error:', error);
-    ctx.status = 500;
-    ctx.body = { error: 'Internal server error' };
-  }
-});
+//     if (gameData) {
+//       const parsedData = JSON.parse(gameData);
+//       parsedData.data = newGameData;
+//       await redis.set(lobbyId, JSON.stringify(parsedData));
+//       ctx.status = 200;
+//       ctx.body = { message: 'Game data updated successfully' };
+//     } else {
+//       ctx.status = 404;
+//       ctx.body = { error: 'Game not found' };
+//     }
+//   } catch (error) {
+//     console.error('Redis error:', error);
+//     ctx.status = 500;
+//     ctx.body = { error: 'Internal server error' };
+//   }
+// });
 
 app
   .use(router.routes())
