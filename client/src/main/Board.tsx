@@ -11,7 +11,7 @@ const Tile = styled('div')({
     margin: 5
 });
 
-export function Board({ game }: { game: Game }) {
+export function Board() {
 
     const n = 3
 

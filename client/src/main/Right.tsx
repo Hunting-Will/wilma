@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
-import { Game } from '../../../types';
+import { Player } from '../../../types';
 
 
 
-export function Right({ game }: { game: Game }) {
+export function Right({ players }: { players: Player[] }) {
 
     return (
         <Box flexDirection="column" display="flex">

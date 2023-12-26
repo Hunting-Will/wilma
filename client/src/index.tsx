@@ -31,7 +31,7 @@ const router = createBrowserRouter([
     element: <SubGame />,
   },
   {
-    path: "/main/:id",
+    path: "/main/:key",
     element: <MainGame />,
   },
 ]);

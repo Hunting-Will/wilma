@@ -15,7 +15,7 @@ export interface RealtimeGameState extends RealtimeServerResponse {
     game: GameController
 }
 
-export interface RealtimeError extends RealtimeServerResponse{
+export interface RealtimeError extends RealtimeServerResponse {
     type: "Error";
     message: string,
     error: any

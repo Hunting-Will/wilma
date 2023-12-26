@@ -8,10 +8,6 @@ export const useGameState = () => {
     const handleStart = () => {
         // Call api
 
-        setGameState('ftue')
-    }
-
-    const handleFinishFtue = () => {
         startMainMainLoop()
     }
 
@@ -24,5 +20,5 @@ export const useGameState = () => {
         }, 1000)
     }
 
-    return { gameState, handleStart, handleFinishFtue }
+    return { gameState, handleStart }
 }

@@ -1,3 +1,4 @@
+import { GameController } from '../../game-logic/GameController';
 import { Game, GameAction } from '../../types/index'
 const baseUrl = 'http://localhost:3001';
 
@@ -7,7 +8,7 @@ export const joinGame = (id: string, nickname: string): Promise<{ playerId: stri
 export const createGame = (name: string): Promise<{ gameId: string }> =>
     fetch(`${baseUrl}/api/createGame/${name}`).then(res => res.json())
 
-export const fetchGame = (id: string): Promise<Game> =>
+export const fetchGame = (id: string): Promise<GameController> =>
     fetch(`${baseUrl}/api/game/${id}`).then(res => res.json())
 
 export const setAction = (key: string, playerId: string, action: GameAction) => fetch(`/game/${key}/setAction`, {

@@ -5,48 +5,52 @@ import Box from "@mui/material/Box";
 import { Button, Container, Typography } from '@mui/material';
 import { InfoContainer } from '../global-ui/InfoContainer';
 import { fetchGame } from '../serverClient';
-import { Game } from '../../../types';
+import { Game, Player } from '../../../types';
 import { Board } from './Board';
 import { Left } from './Left';
 import { Right } from './Right';
 import { useGameState } from './useGameState';
+import { subscribe } from '../liveServerClient';
+import { RealtimeGameState } from '../../../types/realtime-types';
 
 
 export function MainGame() {
-    const [game, setGame] = useState<Game>();
-    const { gameState, handleStart, handleFinishFtue } = useGameState()
+    const [players, setPlayers] = useState<Player[]>();
+    const { gameState, handleStart } = useGameState()
 
-    const { id } = useParams();
+    const { key } = useParams();
 
-    if (!id) {
-        throw new Error('No id')
+    if (!key) {
+        throw new Error('No key')
     }
-    console.log(game)
 
+    const handleData = (data: RealtimeGameState) => {
+        setPlayers(data.game.players);
+
+    }
     useEffect(() => {
         const init = async () => {
-            const game = await fetchGame(id)
-            setGame(game)
+            const game = await fetchGame(key)
+            setPlayers(game.players)
+            subscribe(key, handleData)
         }
 
         init()
-    }, [id])
+    }, [key])
 
 
 
-    if (!game) {
+    if (!players) {
         return <div>Loading</div>
     }
+
     if (gameState === 'waiting') {
-        return <Waiting onStart={handleStart} game={game} />
+        return <Waiting onStart={handleStart} gameKey={key} players={players} />
     }
-    if (gameState === 'ftue') {
-        setTimeout(handleFinishFtue, 2000)
-        return <FTUE />
-    }
+
     return (
         <Box display="flex" justifyContent="space-around">
-            {game && <Left game={game} />}
+            {/* {game && <Left game={game} />} */}
             <Box
                 flexDirection="column"
                 display="flex"
@@ -54,20 +58,17 @@ export function MainGame() {
                 alignItems="center"
             >
                 <InfoContainer>
-                    <Typography variant="h2" component="h2">
-                        Join the game using {id}
-                    </Typography>
 
                 </InfoContainer>
-                {game && <Board game={game} />}
+                <Board />
             </Box>
-            {game && <Right game={game} />}
+            <Right players={players} />
         </Box>
     );
 }
 
 
-export const Waiting = ({ game, onStart }: { game: Game, onStart: () => void }) =>
+export const Waiting = ({ gameKey, onStart, players }: { gameKey: string, onStart: () => void, players: Player[] }) =>
     <Box display="flex" justifyContent="space-around">
         <Box
             flexDirection="column"
@@ -77,7 +78,10 @@ export const Waiting = ({ game, onStart }: { game: Game, onStart: () => void }) 
         >
             <InfoContainer>
                 <Typography variant="h2" component="h2">
-                    Join the game using {game.key}
+                    Join the game using {gameKey}
+                </Typography>
+                <Typography variant="h4" >
+                    {players.map(p => p.Nickname).join(', ')}
                 </Typography>
                 <Button variant="outlined" onClick={onStart}>Start</Button>
             </InfoContainer>

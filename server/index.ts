@@ -3,7 +3,7 @@ import Router from '@koa/router';
 import bodypareser from 'koa-bodyparser';
 import cors from '@koa/cors'
 
-import {RealtimeServer} from './realtime-server/RealtimeServer';
+import { RealtimeServer } from './realtime-server/RealtimeServer';
 import { GameController } from '../game-logic/GameController';
 import { getGame, setGame } from './gamesManager'
 import { GameAction, GridCell } from '../types';
