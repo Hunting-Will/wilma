@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Box from "@mui/material/Box";
-import { Button, Container, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { InfoContainer } from '../global-ui/InfoContainer';
 import { fetchGame } from '../serverClient';
-import { Game, Player } from '../../../types';
+import { Player } from '../../../types';
 import { Board } from './Board';
-import { Left } from './Left';
+// import { Left } from './Left';
 import { Right } from './Right';
 import { useGameState } from './useGameState';
 import { subscribe } from '../liveServerClient';

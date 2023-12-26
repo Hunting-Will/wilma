@@ -1,4 +1,4 @@
-import { GameAction, GridCell, Player, TurnResults } from "../types";
+import { GameAction, GameState, GridCell, Player, TurnResults } from "../types";
 import { GridController } from "./GridController";
 
 function generateGameCode() {
@@ -15,6 +15,7 @@ export class GameController {
     private gc: GridController;
     public players: Player[];
     public key: string;
+    public state: GameState = 'wait';
 
     constructor(gridLength: number, gridWidth: number) {
         this.gc = new GridController(gridLength, gridWidth);
@@ -22,10 +23,13 @@ export class GameController {
         this.key = generateGameCode();
     }
 
+    public InitTurn() {
+        this.state = 'set'
+    }
+
     public AddPlayer(player: Player) {
         this.players.push(player);
     }
-
 
     public RemovePlayer(id: Player['ID']) {
         this.players = this.players.filter(p => p.ID !== id);
@@ -36,6 +40,7 @@ export class GameController {
     }
 
     public SimulateTurn(): TurnResults {
+        this.state = 'resolve'
         var results = this.gc.SimulateTurn();
         for (var playerID in Object.keys(results)) {
             this.players[playerID].Score += results[playerID].scoreChange;
