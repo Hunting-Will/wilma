@@ -10,6 +10,8 @@ export const createGame = (name: string): Promise<{ gameId: string }> =>
 
 export const fetchGame = (id: string): Promise<GameController> =>
     fetch(`${baseUrl}/api/game/${id}`).then(res => res.json())
+    
+export const waitForChoices = (id:string) => fetch(`${baseUrl}/api/game/${id}/waitForChoices`);
 
 export const setAction = (key: string, playerId: string, action: GameAction) => fetch(`${baseUrl}/game/${key}/setAction`, {
     method: 'POST',

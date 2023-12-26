@@ -1,3 +1,4 @@
+import { TurnResults } from ".";
 import { GameController } from "../game-logic/GameController";
 
 export interface RealtimeMessage {
@@ -13,6 +14,11 @@ export interface RealtimeServerResponse {
 export interface RealtimeGameState extends RealtimeServerResponse {
     type: "GameState",
     game: GameController
+}
+
+export interface RealtimeTurnResults extends RealtimeServerResponse {
+    type: "TurnResults",
+    results: TurnResults
 }
 
 export interface RealtimeError extends RealtimeServerResponse {

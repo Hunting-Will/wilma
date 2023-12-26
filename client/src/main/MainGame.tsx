@@ -15,37 +15,20 @@ import { RealtimeGameState } from '../../../types/realtime-types';
 
 
 export function MainGame() {
-    const [players, setPlayers] = useState<Player[]>();
-    const { gameState, handleStart } = useGameState()
-
     const { key } = useParams();
-
+    
     if (!key) {
         throw new Error('No key')
     }
+    
+    const { gameState, handleStart } = useGameState(key)
 
-    const handleData = (data: RealtimeGameState) => {
-        setPlayers(data.game.players);
-
-    }
-    useEffect(() => {
-        const init = async () => {
-            const game = await fetchGame(key)
-            setPlayers(game.players)
-            subscribe(key, handleData)
-        }
-
-        init()
-    }, [key])
-
-
-
-    if (!players) {
+    if (!gameState?.players) {
         return <div>Loading</div>
     }
 
-    if (gameState === 'waiting') {
-        return <Waiting onStart={handleStart} gameKey={key} players={players} />
+    if (gameState?.state === 'waiting') {
+        return <Waiting onStart={handleStart} gameKey={key} players={gameState.players} />
     }
 
     return (
@@ -62,7 +45,7 @@ export function MainGame() {
                 </InfoContainer>
                 <Board />
             </Box>
-            <Right players={players} />
+            <Right players={gameState.players} />
         </Box>
     );
 }

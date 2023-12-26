@@ -10,7 +10,8 @@ export type Player = {
     Score: number,
 }
 
-export type GameState = 'wait' | 'set' | 'resolve'
+export type GameState = 'waiting' | 'player-choice' | 'simulating';
+
 export type PlayerAction = {
     player: Player,
     action: GameAction

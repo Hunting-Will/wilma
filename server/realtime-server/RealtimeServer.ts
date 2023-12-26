@@ -3,8 +3,10 @@ import {
   RealtimeError,
   RealtimeGameState,
   RealtimeMessage,
+  RealtimeTurnResults,
 } from "../../types/realtime-types";
 import { GameController } from "../../game-logic/GameController";
+import { TurnResults } from "../../types";
 
 const server = new ws.Server({ port: 8080 });
 const gameToClients: { [key: string]: ws.WebSocket[] } = {};
@@ -28,6 +30,13 @@ export const RealtimeServer = {
   AddRoute,
   EmitGameState: (gameID: string, game: GameController) => {
     const message: RealtimeGameState = { game, type: "GameState" };
+    if (!gameToClients[gameID]) {
+      gameToClients[gameID] = [];
+    }
+    gameToClients[gameID].forEach((c) => c.send(JSON.stringify(message)));
+  },
+  EmitGameResults: (gameID: string, results: TurnResults) => {
+    const message: RealtimeTurnResults = {type: "TurnResults", results };
     if (!gameToClients[gameID]) {
       gameToClients[gameID] = [];
     }

@@ -43,7 +43,7 @@ const Grid = ({ n }: { n: number }) => {
     );
 };
 
-const mockActionsArray: GameAction[] = ['Seed', 'Harvest', 'PutMouse']
+const mockActionsArray: GameAction[] = ['Seed', 'Harvest', 'PutMouse'] as unknown as GameAction[]
 
 export function SubGame() {
     const n = 3
@@ -67,7 +67,7 @@ export function SubGame() {
     useEffect(() => {
         const init = async () => {
             const game = await fetchGame(key)
-            subscribe(key, handleData)
+            // subscribe(key, handleData)
 
             const player = game.players.find(({ ID }) => ID === playerId);
             setPlayer(player);

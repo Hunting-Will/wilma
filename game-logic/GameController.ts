@@ -15,7 +15,7 @@ export class GameController {
     private gc: GridController;
     public players: Player[];
     public key: string;
-    public state: GameState = 'wait';
+    public state: GameState = 'waiting';
 
     constructor(gridLength: number, gridWidth: number) {
         this.gc = new GridController(gridLength, gridWidth);
@@ -23,8 +23,8 @@ export class GameController {
         this.key = generateGameCode();
     }
 
-    public InitTurn() {
-        this.state = 'set'
+    public WaitForChoices() {
+        this.state = 'player-choice';
     }
 
     public AddPlayer(player: Player) {
@@ -40,7 +40,7 @@ export class GameController {
     }
 
     public SimulateTurn(): TurnResults {
-        this.state = 'resolve'
+        this.state = 'simulating'
         var results = this.gc.SimulateTurn();
         for (var playerID in Object.keys(results)) {
             this.players[playerID].Score += results[playerID].scoreChange;

@@ -82,8 +82,13 @@ router.post('/game/:key/simulateTurn', async (ctx) => {
   const { key } = ctx.params;
 
   const game = await getGame(key)
-  game.SimulateTurn()
+  const results = game.SimulateTurn()
+  await setGame(key, game)
+
+  RealtimeServer.EmitGameResults(key, results);
   RealtimeServer.EmitGameState(key, game);
+  ctx.status = 200
+  ctx.body = { results }
 });
 
 router.post('/game/:key/setAction', async (ctx) => {
@@ -94,6 +99,18 @@ router.post('/game/:key/setAction', async (ctx) => {
   const player = game.players.find(({ ID }) => ID === playerId)
   game.SetPlayerAction(player, action, cellId)
   RealtimeServer.EmitGameState(key, game);
+});
+
+router.get('/game/:key/waitForChoices', async (ctx) => {
+  const { key } = ctx.params;
+
+  console.log("I'm here!!!");
+  const game = await getGame(key);
+  game.WaitForChoices();
+  await setGame(key, game)
+  RealtimeServer.EmitGameState(key, game);
+
+  ctx.status = 200;
 });
 
 app
