@@ -11,7 +11,7 @@ export const createGame = (name: string): Promise<{ gameId: string }> =>
 export const fetchGame = (id: string): Promise<GameController> =>
     fetch(`${baseUrl}/api/game/${id}`).then(res => res.json())
 
-export const setAction = (key: string, playerId: string, action: GameAction) => fetch(`/game/${key}/setAction`, {
+export const setAction = (key: string, playerId: string, action: GameAction) => fetch(`${baseUrl}/game/${key}/setAction`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
@@ -19,7 +19,7 @@ export const setAction = (key: string, playerId: string, action: GameAction) => 
     body: JSON.stringify({ action, playerId })
 })
 
-export const simulateTurn = (key: string) => fetch(`/game/${key}/simulateTurn`, {
+export const simulateTurn = (key: string) => fetch(`${baseUrl}/game/${key}/simulateTurn`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'

@@ -33,10 +33,9 @@ export type CellState = {
     growing: boolean
 }
 
-export enum GameAction {
-    PutMouse,
-    PutSnake,
-    Seed,
-    Harvest,
-    Poison,
-}
+export type GameAction =
+    'PutMouse' |
+    'PutSnake' |
+    'Seed' |
+    'Harvest' |
+    'Poison'

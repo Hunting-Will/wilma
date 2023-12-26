@@ -27,7 +27,7 @@ const router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/sub/:id",
+    path: "/sub/:key",
     element: <SubGame />,
   },
   {

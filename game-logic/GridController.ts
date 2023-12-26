@@ -36,31 +36,31 @@ export class GridController {
             for (var { action, player } of cell.pendingActions) {
                 results[player.ID] = results[player.ID] == undefined ? { scoreChange: 0 } : results[player.ID];
                 switch (action) {
-                    case GameAction.Harvest:
-                        if (actionAmounts[GameAction.Poison] > 0) {
+                    case 'Harvest':
+                        if (actionAmounts['Poison'] > 0) {
                             results[player.ID].scoreChange -= cell.state.cellValue;
                         } else {
                             results[player.ID].scoreChange += cell.state.cellValue;
                         }
                         break;
-                    case GameAction.Poison:
-                        if (actionAmounts[GameAction.Harvest] < 1) {
+                    case 'Poison':
+                        if (actionAmounts['Harvest'] < 1) {
                             results[player.ID].scoreChange -= cell.state.cellValue / 2;
                         }
                         break;
-                    case GameAction.Seed:
+                    case 'Seed':
                         results[player.ID].scoreChange += SEEDING_POINTS;
                 }
             }
             cell.pendingActions = [];
 
-            if (actionAmounts[GameAction.Harvest] > 0) {
+            if (actionAmounts['Harvest'] > 0) {
                 cell.state = {
                     cellValue: 0,
                     growing: false
                 };
             }
-            if (cell.state.growing == false && actionAmounts[GameAction.Seed] > 0) {
+            if (cell.state.growing == false && actionAmounts['Seed'] > 0) {
                 cell.state.growing = true;
             } else if (cell.state.growing == true) {
                 cell.state.cellValue += 1;
