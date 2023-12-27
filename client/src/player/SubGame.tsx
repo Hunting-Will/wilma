@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
@@ -7,6 +7,9 @@ import type { Player, GameAction } from '../../../types/';
 import { subscribe } from '../liveServerClient';
 import { GameController } from '../../../game-logic/GameController';
 import { RealtimeGameState } from '../../../types/realtime-types';
+import { useGameState } from '../main/useGameState';
+import { InfoContainer } from '../global-ui/InfoContainer';
+import { Typography } from '@mui/material';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     height: 100,
@@ -46,35 +49,28 @@ const Grid = ({ n }: { n: number }) => {
 const mockActionsArray: GameAction[] = ['Seed', 'Harvest', 'PutMouse'] as unknown as GameAction[]
 
 export function SubGame() {
-    const n = 3
-    const [player, setPlayer] = useState<Player>()
-    const [game, setGame] = useState<GameController>()
-
-    const [actions, setActions] = useState<GameAction[]>(mockActionsArray)
-    const [selectedAction, setSelectedAction] = useState<GameAction>()
-
     const { key } = useParams();
-    const playerId = localStorage.getItem("playerId");
 
     if (!key) {
         throw new Error("No key");
     }
 
-    const handleData = (data: RealtimeGameState) => {
-        setGame(data.game);
+    const n = 3
+
+    const { gameState, handleStart } = useGameState(key)
+    const [actions, setActions] = useState<GameAction[]>(mockActionsArray)
+    const [selectedAction, setSelectedAction] = useState<GameAction>()
+
+    const playerId = localStorage.getItem("playerId");
+
+    const player = useMemo(() =>
+        gameState?.players.find(({ ID }) => ID === playerId)
+        , [playerId, gameState])
+
+
+    if (gameState?.state === 'waiting') {
+        return <Waiting />
     }
-
-    useEffect(() => {
-        const init = async () => {
-            const game = await fetchGame(key)
-            // subscribe(key, handleData)
-
-            const player = game.players.find(({ ID }) => ID === playerId);
-            setPlayer(player);
-        };
-        init();
-    }, []);
-
     return (
         <Box
             display="flex"
@@ -106,3 +102,20 @@ export function SubGame() {
         </Box>
     );
 }
+
+
+export const Waiting = () =>
+    <Box display="flex" justifyContent="space-around">
+        <Box
+            flexDirection="column"
+            display="flex"
+            justifyContent="space-between"
+            alignItems="center"
+        >
+            <InfoContainer>
+                <Typography variant="h2" component="h2">
+                    Waiting to start game
+                </Typography>
+            </InfoContainer>
+        </Box>
+    </Box>

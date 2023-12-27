@@ -4,23 +4,20 @@ import { useParams } from 'react-router-dom';
 import Box from "@mui/material/Box";
 import { Button, Typography } from '@mui/material';
 import { InfoContainer } from '../global-ui/InfoContainer';
-import { fetchGame } from '../serverClient';
 import { Player } from '../../../types';
 import { Board } from './Board';
 // import { Left } from './Left';
 import { Right } from './Right';
 import { useGameState } from './useGameState';
-import { subscribe } from '../liveServerClient';
-import { RealtimeGameState } from '../../../types/realtime-types';
 
 
 export function MainGame() {
     const { key } = useParams();
-    
+
     if (!key) {
         throw new Error('No key')
     }
-    
+
     const { gameState, handleStart } = useGameState(key)
 
     if (!gameState?.players) {
