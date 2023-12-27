@@ -36,11 +36,11 @@ const Cell = styled('div')({
     alignItems: 'center'
 });
 
-const Grid = ({ n }: { n: number }) => {
+const Grid = ({ n, value, index }: { n: number, value: string | undefined, index: number }) => {
     return (
         <GridContainer n={n}>
-            {Array.from({ length: n * n }, (_, index) => (
-                <Cell key={`cell-${index}`}>Cell {index + 1}</Cell>
+            {Array.from({ length: n * n }, (_, i) => (
+                <Cell key={`cell-${i}`}>{i === index ? value : ''}</Cell>
             ))}
         </GridContainer>
     );
@@ -60,6 +60,7 @@ export function SubGame() {
     const { gameState, handleStart } = useGameState(key)
     const [actions, setActions] = useState<GameAction[]>(mockActionsArray)
     const [selectedAction, setSelectedAction] = useState<GameAction>()
+    const [actionGridIndex, setActionGridIndex] = useState()
 
     const playerId = localStorage.getItem("playerId");
 
@@ -88,7 +89,7 @@ export function SubGame() {
                 <Box>
                     Game {key}, Player {JSON.stringify(player)}
                 </Box>
-                <Grid n={n}></Grid>
+                <Grid n={n} value={selectedAction} index={5}></Grid>
                 <Box display="flex" justifyContent="center">
                     {actions.map((action) =>
                         <Item
