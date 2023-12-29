@@ -5,10 +5,10 @@ import Box from "@mui/material/Box";
 import { Button, Typography } from "@mui/material";
 import { InfoContainer } from "../global-ui/InfoContainer";
 import { Player } from "../../../types";
-import { Board } from "./Board";
 import { Right } from "./Right";
 import { useGameState } from "./useGameState";
 import { Left } from "./Left";
+import { Grid } from "../global-ui/Grid";
 
 export function MainGame() {
   const { key } = useParams();
@@ -37,6 +37,7 @@ export function MainGame() {
         display="flex"
         justifyContent="space-between"
         alignItems="center"
+        paddingBottom={10}
       >
         {gameState?.state === "simulating" ? (
           <InfoContainer>
@@ -51,7 +52,7 @@ export function MainGame() {
             <Typography variant="h5">{time}</Typography>
           </InfoContainer>
         )}
-        <Board grid={gameState.gc.grid} />
+        <Grid grid={gameState.gc.grid} />
       </Box>
       <Right players={gameState.players} />
     </Box>

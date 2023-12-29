@@ -19,7 +19,7 @@ export class GridController {
             pendingActions: [],
             state: {
                 cellValue: 0,
-                growing: true
+                growing: false
             }
         }
     }

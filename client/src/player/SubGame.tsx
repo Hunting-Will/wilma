@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
@@ -6,7 +6,7 @@ import type { GameAction } from '../../../types/';
 import { useGameState } from '../main/useGameState';
 import { InfoContainer } from '../global-ui/InfoContainer';
 import { Typography } from '@mui/material';
-import { Grid } from './Grid';
+import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
@@ -28,9 +28,8 @@ export function SubGame() {
         throw new Error("No key");
     }
 
-
     const { gameState } = useGameState(key)
-    const [actions, setActions] = useState<GameAction[]>(mockActionsArray)
+    const [actions, _] = useState<GameAction[]>(mockActionsArray)
     const [selectedAction, setSelectedAction] = useState<GameAction>()
     const [cellID, setCellID] = useState('')
 
@@ -40,13 +39,15 @@ export function SubGame() {
         gameState?.players.find(({ ID }) => ID === playerId)
         , [playerId, gameState])
 
-
-    if (!gameState?.gc.grid || !playerId || !player) {
-        return <div>missing shit</div>
-    }
+    useEffect(() => {
+        if (gameState?.state === 'simulating') {
+            setCellID('')
+            setSelectedAction(undefined)
+        }
+    }, [gameState])
 
     const handleSetGrid = (id: string) => {
-        if (!selectedAction) {
+        if (!selectedAction || !playerId) {
             return
         }
 
@@ -57,10 +58,10 @@ export function SubGame() {
         return <Lobby />
     }
     if (gameState?.state === 'simulating') {
-        return <div>Watch main screen for results</div>
+        return <Box> <Typography variant="h2" component="h2">
+            Watch main screen for results
+        </Typography></Box>
     }
-
-
 
     return (
         <Box
@@ -79,7 +80,7 @@ export function SubGame() {
                 <Box>
                     Game {key}, Player {JSON.stringify(player)}
                 </Box>
-                <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} selectecID={cellID} selectedAction={selectedAction}></Grid>
+                <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} value={selectedAction}></Grid>
                 <Box display="flex" justifyContent="center">
                     {actions.map((action) =>
                         <Item
