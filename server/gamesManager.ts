@@ -1,6 +1,7 @@
 import Redis from 'ioredis'
 
 import { GameController } from "../game-logic/GameController";
+import { GridController } from '../game-logic/GridController';
 const redis = new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
 
 export let games: Record<GameController['key'], GameController> = {};
@@ -11,7 +12,9 @@ export const getGame = async (key: string) => {
         return game
     }
 
-    const remoteGame: GameController = Object.assign(new GameController(3, 3), JSON.parse(await redis.get(key)))
+    const redisRes: GameController = JSON.parse(await redis.get(key))
+    const remoteGame: GameController = Object.assign(new GameController(3, 3), redisRes)
+    remoteGame.gc = Object.assign(new GridController(3, 3), redisRes.gc)
 
     games[key] = remoteGame
 

@@ -72,6 +72,9 @@ export function SubGame() {
     if (gameState?.state === 'waiting') {
         return <Waiting />
     }
+    if (gameState?.state === 'simulating') {
+        return <div>Simulating</div>
+    }
     return (
         <Box
             display="flex"

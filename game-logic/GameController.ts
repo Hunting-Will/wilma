@@ -12,7 +12,7 @@ function generateGameCode() {
 
 export class GameController {
 
-    private gc: GridController;
+    public gc: GridController;
     public players: Player[];
     public key: string;
     public state: GameState = 'waiting';
@@ -45,6 +45,8 @@ export class GameController {
         for (var playerID in Object.keys(results)) {
             this.players[playerID].Score += results[playerID].scoreChange;
         }
+        console.log('simulated')
+        console.log(JSON.stringify(results))
         return results;
     }
 }
