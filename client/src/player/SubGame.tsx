@@ -4,7 +4,6 @@ import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
 import type { GameAction } from '../../../types/';
 import { useGameState } from '../main/useGameState';
-import { InfoContainer } from '../global-ui/InfoContainer';
 import { Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
@@ -20,7 +19,7 @@ const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => (
 }));
 
 
-const actions: GameAction[] = ['Seed', 'Harvest', 'PutMouse'] as unknown as GameAction[]
+const actions: GameAction[] = ['Seed', 'Harvest', 'Poison'] as unknown as GameAction[]
 
 export function SubGame() {
     const { key } = useParams();
