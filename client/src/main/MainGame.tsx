@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
@@ -17,7 +16,7 @@ export function MainGame() {
     throw new Error("No key");
   }
 
-  const { gameState, handleStart, time } = useGameState(key);
+  const { gameState, handleStart, time, handleSimulateTurn } = useGameState(key);
 
   if (!gameState?.players) {
     return <div>Loading...</div>;
@@ -48,6 +47,9 @@ export function MainGame() {
           </InfoContainer>
         ) : (
           <InfoContainer>
+            <Button variant="outlined" onClick={handleSimulateTurn}>
+              End
+            </Button>
             <Typography variant="h5">Choose your action!</Typography>
             <Typography variant="h5">{time}</Typography>
           </InfoContainer>

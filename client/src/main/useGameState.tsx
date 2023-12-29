@@ -12,6 +12,8 @@ import { GameController } from "../../../game-logic/GameController";
 
 const turnTime = 6
 
+let interval: NodeJS.Timer;
+
 export const useGameState = (key: string) => {
     const [gameState, setGameState] = useState<GameController>();
     const [time, setTime] = useState(0)
@@ -28,6 +30,10 @@ export const useGameState = (key: string) => {
         }
 
         init()
+
+        return (() => {
+            clearInterval(interval)
+        })
     }, [])
 
     const handleData = (data: RealtimeServerResponse) => {
@@ -45,13 +51,17 @@ export const useGameState = (key: string) => {
         startChoicesLoop();
     };
 
+    const handleSimulateTurn = async () => {
+        simulateTurn(key)
+        clearInterval(interval)
+        setTime(0)
+    };
+
     const startChoicesLoop = () => {
-        const interval = setInterval(() => {
+        interval = setInterval(() => {
             setTime((time) => {
                 if (time + 1 >= turnTime) {
-                    simulateTurn(key)
-                    clearInterval(interval)
-                    setTime(0)
+                    // handleSimulateTurn()
                 }
                 console.log(time);
                 return time + 1
@@ -59,7 +69,7 @@ export const useGameState = (key: string) => {
         }, 1000);
     };
 
-    return { gameState, handleStart, time };
+    return { gameState, handleStart, time, handleSimulateTurn };
 };
 
 // TODO: move to some typings file
