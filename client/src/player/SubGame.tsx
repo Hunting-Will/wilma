@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
@@ -8,6 +8,7 @@ import { InfoContainer } from '../global-ui/InfoContainer';
 import { Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
+import { Lobby } from './Lobby';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     height: 100,
@@ -19,7 +20,7 @@ const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => (
 }));
 
 
-const mockActionsArray: GameAction[] = ['Seed', 'Harvest', 'PutMouse'] as unknown as GameAction[]
+const actions: GameAction[] = ['Seed', 'Harvest', 'PutMouse'] as unknown as GameAction[]
 
 export function SubGame() {
     const { key } = useParams();
@@ -29,7 +30,6 @@ export function SubGame() {
     }
 
     const { gameState } = useGameState(key)
-    const [actions, _] = useState<GameAction[]>(mockActionsArray)
     const [selectedAction, setSelectedAction] = useState<GameAction>()
     const [cellID, setCellID] = useState('')
 
@@ -39,12 +39,16 @@ export function SubGame() {
         gameState?.players.find(({ ID }) => ID === playerId)
         , [playerId, gameState])
 
+    const init = useCallback(() => {
+        setCellID('')
+        setSelectedAction(undefined)
+    }, [])
+
     useEffect(() => {
         if (gameState?.state === 'simulating') {
-            setCellID('')
-            setSelectedAction(undefined)
+            init()
         }
-    }, [gameState])
+    }, [init, gameState])
 
     const handleSetGrid = (id: string) => {
         if (!selectedAction || !playerId) {
@@ -58,9 +62,11 @@ export function SubGame() {
         return <Lobby />
     }
     if (gameState?.state === 'simulating') {
-        return <Box> <Typography variant="h2" component="h2">
-            Watch main screen for results
-        </Typography></Box>
+        return <Box>
+            <Typography variant="h2" component="h2">
+                Watch main screen for results
+            </Typography>
+        </Box>
     }
 
     return (
@@ -95,20 +101,3 @@ export function SubGame() {
         </Box>
     );
 }
-
-
-export const Lobby = () =>
-    <Box display="flex" justifyContent="space-around">
-        <Box
-            flexDirection="column"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-        >
-            <InfoContainer>
-                <Typography variant="h2" component="h2">
-                    Waiting to start game
-                </Typography>
-            </InfoContainer>
-        </Box>
-    </Box>
