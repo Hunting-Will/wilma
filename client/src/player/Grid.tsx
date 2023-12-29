@@ -1,4 +1,4 @@
-import { GridCell } from "../../../types";
+import { GameAction, GridCell } from "../../../types";
 import { styled } from '@mui/system';
 
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
@@ -14,17 +14,18 @@ const Cell = styled('div')({
     width: 100,
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    cursor: 'pointer'
 });
 
 
-export const Grid = ({ grid, value, selectecID, onSet }: { grid: GridCell[], value: string | undefined, selectecID: string, onSet: (cellId: string) => void }) => {
+export const Grid = ({ grid, selectecID, onSet, selectedAction }: { grid: GridCell[], selectecID: string, onSet: (cellId: string) => void, selectedAction: GameAction | undefined }) => {
     const n = Math.sqrt(grid.length)
 
     return (
         <GridContainer n={n}>
             {grid.map((v) => (
-                <Cell key={`cell-${v.ID}`} onClick={() => onSet(v.ID)}>{v.ID === selectecID ? value : ''}</Cell>
+                <Cell key={`cell-${v.ID}`} onClick={() => onSet(v.ID)}>{v.ID === selectecID ? selectedAction : ''}</Cell>
             ))}
         </GridContainer>
     );

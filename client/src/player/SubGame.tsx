@@ -7,6 +7,7 @@ import { useGameState } from '../main/useGameState';
 import { InfoContainer } from '../global-ui/InfoContainer';
 import { Typography } from '@mui/material';
 import { Grid } from './Grid';
+import { setAction } from '../serverClient';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     height: 100,
@@ -33,9 +34,6 @@ export function SubGame() {
     const [selectedAction, setSelectedAction] = useState<GameAction>()
     const [cellID, setCellID] = useState('')
 
-
-    const n = Math.sqrt(gameState?.gc.grid.length || 0)
-
     const playerId = localStorage.getItem("playerId");
 
     const player = useMemo(() =>
@@ -43,20 +41,27 @@ export function SubGame() {
         , [playerId, gameState])
 
 
-    const handleSetGrid = (cellId: string) => {
-        setCellID(cellID)
+    if (!gameState?.gc.grid || !playerId || !player) {
+        return <div>missing shit</div>
+    }
+
+    const handleSetGrid = (id: string) => {
+        if (!selectedAction) {
+            return
+        }
+
+        setAction(key, playerId, selectedAction, cellID)
+        setCellID(id)
     }
     if (gameState?.state === 'waiting') {
         return <Waiting />
     }
-    // if (gameState?.state === 'simulating') {
-    //     return <div>Watch main screen for results</div>
-    // }
-
-
-    if (!gameState?.gc.grid) {
-        return <div></div>
+    if (gameState?.state === 'simulating') {
+        return <div>Watch main screen for results</div>
     }
+
+
+
     return (
         <Box
             display="flex"
@@ -74,7 +79,7 @@ export function SubGame() {
                 <Box>
                     Game {key}, Player {JSON.stringify(player)}
                 </Box>
-                <Grid grid={gameState?.gc.grid} value={cellID} onSet={handleSetGrid} selectecID={cellID}></Grid>
+                <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} selectecID={cellID} selectedAction={selectedAction}></Grid>
                 <Box display="flex" justifyContent="center">
                     {actions.map((action) =>
                         <Item

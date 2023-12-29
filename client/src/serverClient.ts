@@ -13,12 +13,12 @@ export const fetchGame = (id: string): Promise<GameController> =>
 
 export const waitForChoices = (id: string) => fetch(`${baseUrl}/api/game/${id}/waitForChoices`);
 
-export const setAction = (key: string, playerId: string, action: GameAction) => fetch(`${baseUrl}/api/game/${key}/setAction`, {
+export const setAction = (key: string, playerId: string, action: GameAction, cellId: string) => fetch(`${baseUrl}/api/game/${key}/setAction`, {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ action, playerId })
+    body: JSON.stringify({ action, playerId, cellId })
 })
 
 export const simulateTurn = (key: string) => fetch(`${baseUrl}/api/game/${key}/simulateTurn`, {
