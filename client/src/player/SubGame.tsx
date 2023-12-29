@@ -55,7 +55,7 @@ export function SubGame() {
             return
         }
 
-        setAction(key, playerId, selectedAction, cellID)
+        setAction(key, playerId, selectedAction, id)
         setCellID(id)
     }
     if (gameState?.state === 'lobby') {
