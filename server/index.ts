@@ -98,6 +98,7 @@ router.post('/game/:key/setAction', async (ctx) => {
   const game = await getGame(key)
   const player = game.players.find(({ ID }) => ID === playerId)
   game.SetPlayerAction(player, action, cellId)
+  await setGame(key, game)
   RealtimeServer.EmitGameState(key, game);
 
   ctx.status = 200
