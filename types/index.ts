@@ -10,7 +10,7 @@ export type Player = {
     Score: number,
 }
 
-export type GameState = 'waiting' | 'player-choice' | 'simulating';
+export type GameState = 'lobby' | 'player-choice' | 'simulating';
 
 export type PlayerAction = {
     player: Player,

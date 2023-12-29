@@ -1,96 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import Box from "@mui/material/Box";
-import { Button, Typography } from '@mui/material';
-import { InfoContainer } from '../global-ui/InfoContainer';
-import { Player } from '../../../types';
-import { Board } from './Board';
-// import { Left } from './Left';
-import { Right } from './Right';
-import { useGameState } from './useGameState';
-
+import { Button, Typography } from "@mui/material";
+import { InfoContainer } from "../global-ui/InfoContainer";
+import { Player } from "../../../types";
+import { Board } from "./Board";
+import { Right } from "./Right";
+import { useGameState } from "./useGameState";
+import { Left } from "./Left";
 
 export function MainGame() {
-    const { key } = useParams();
+  const { key } = useParams();
 
-    if (!key) {
-        throw new Error('No key')
-    }
+  if (!key) {
+    throw new Error("No key");
+  }
 
-    const { gameState, handleStart, time } = useGameState(key)
+  const { gameState, handleStart, time } = useGameState(key);
 
-    if (!gameState?.players) {
-        return <div>Loading</div>
-    }
+  if (!gameState?.players) {
+    return <div>Loading...</div>;
+  }
 
-    if (gameState?.state === 'waiting') {
-        return <Waiting onStart={handleStart} gameKey={key} players={gameState.players} />
-    }
-
-    if (gameState?.state === 'simulating') {
-        return <Simulating onStart={handleStart} gameKey={key} players={gameState.players} />
-    }
-
+  if (gameState?.state === "lobby") {
     return (
-        <Box display="flex" justifyContent="space-around">
-            {/* {gameState} */}
-            {/* {game && <Left game={game} />} */}
-            <Box
-                flexDirection="column"
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-            >
-                <InfoContainer>
-                    <Typography variant="h2">{time}</Typography>
-                    <Typography variant="h3">Player selecting actions</Typography>
-
-                </InfoContainer>
-                <Board />
-            </Box>
-            <Right players={gameState.players} />
-        </Box>
+      <Lobby onStart={handleStart} gameKey={key} players={gameState.players} />
     );
+  }
+
+  return (
+    <Box display="flex" style={{height: "100vh"}} justifyContent="space-around">
+      <Left game={gameState} />
+      <Box
+        flexDirection="column"
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+      >
+        {gameState?.state === "simulating" ? (
+          <InfoContainer>
+            <Typography>Yay animations and shit</Typography>
+            <Button variant="outlined" onClick={handleStart}>
+              Next Turn
+            </Button>
+          </InfoContainer>
+        ) : (
+          <InfoContainer>
+            <Typography variant="h5">Choose your action!</Typography>
+            <Typography variant="h5">{time}</Typography>
+          </InfoContainer>
+        )}
+        <Board />
+      </Box>
+      <Right players={gameState.players} />
+    </Box>
+  );
 }
 
-
-export const Waiting = ({ gameKey, onStart, players }: { gameKey: string, onStart: () => void, players: Player[] }) =>
-    <Box display="flex" justifyContent="space-around">
-        <Box
-            flexDirection="column"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-        >
-            <InfoContainer>
-                <Typography variant="h2" component="h2">
-                    Join the game using {gameKey}
-                </Typography>
-                <Typography variant="h4" >
-                    {players.map(p => p.Nickname).join(', ')}
-                </Typography>
-                <Button variant="outlined" onClick={onStart}>Start</Button>
-            </InfoContainer>
-        </Box>
+export const Lobby = ({
+  gameKey,
+  onStart,
+  players,
+}: {
+  gameKey: string;
+  onStart: () => void;
+  players: Player[];
+}) => (
+  <Box display="flex" justifyContent="space-around">
+    <Box
+      flexDirection="column"
+      display="flex"
+      justifyContent="space-between"
+      alignItems="center"
+    >
+      <InfoContainer>
+        <Typography variant="h2" component="h2">
+          Join the game using {gameKey}
+        </Typography>
+        <Typography variant="h4">
+          {players.map((p) => p.Nickname).join(", ")}
+        </Typography>
+        <Button variant="outlined" onClick={onStart}>
+          Start
+        </Button>
+      </InfoContainer>
     </Box>
-
-export const Simulating = ({ gameKey, onStart, players }: { gameKey: string, onStart: () => void, players: Player[] }) =>
-    <Box display="flex" justifyContent="space-around">
-        <Box
-            flexDirection="column"
-            display="flex"
-            justifyContent="space-between"
-            alignItems="center"
-        >
-            <InfoContainer>
-                <Typography variant="h2" component="h2">
-                    Start Next Turn
-                </Typography>
-                <Typography variant="h4" >
-                    {players.map(p => p.Nickname).join(', ')}
-                </Typography>
-                <Button variant="outlined" onClick={onStart}>Start</Button>
-            </InfoContainer>
-        </Box>
-    </Box>
+  </Box>
+);

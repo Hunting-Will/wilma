@@ -53,8 +53,8 @@ export function SubGame() {
         setAction(key, playerId, selectedAction, cellID)
         setCellID(id)
     }
-    if (gameState?.state === 'waiting') {
-        return <Waiting />
+    if (gameState?.state === 'lobby') {
+        return <Lobby />
     }
     if (gameState?.state === 'simulating') {
         return <div>Watch main screen for results</div>
@@ -96,7 +96,7 @@ export function SubGame() {
 }
 
 
-export const Waiting = () =>
+export const Lobby = () =>
     <Box display="flex" justifyContent="space-around">
         <Box
             flexDirection="column"

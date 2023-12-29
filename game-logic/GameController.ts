@@ -15,7 +15,7 @@ export class GameController {
     public gc: GridController;
     public players: Player[];
     public key: string;
-    public state: GameState = 'waiting';
+    public state: GameState = 'lobby';
 
     constructor(gridLength: number, gridWidth: number) {
         this.gc = new GridController(gridLength, gridWidth);
