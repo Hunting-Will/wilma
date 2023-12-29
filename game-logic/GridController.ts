@@ -7,7 +7,7 @@ function UUID() {
 }
 
 export class GridController {
-    private grid: GridCell[]
+    public grid: GridCell[]
 
     constructor(gridLength: number, gridWidth: number) {
         this.grid = [...Array(gridLength * gridWidth).keys()].map(GridController.CreateEmptyCell);

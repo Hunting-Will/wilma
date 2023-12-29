@@ -10,7 +10,7 @@ import {
 import { GameController } from "../../../game-logic/GameController";
 
 
-const turnTime = 10
+const turnTime = 4
 
 export const useGameState = (key: string) => {
     const [gameState, setGameState] = useState<GameController>();
@@ -34,6 +34,10 @@ export const useGameState = (key: string) => {
         if (isRealtimeGameState(data)) {
             setGameState(data.game);
         }
+
+        if (isRealtimeTurnResults(data)) {
+            console.log('results', data)
+        }
     };
 
     subscribe(key, handleData);
@@ -49,6 +53,7 @@ export const useGameState = (key: string) => {
                 if (time + 1 >= turnTime) {
                     simulateTurn(key)
                     clearInterval(interval)
+                    setTime(0)
                 }
                 console.log(time);
                 return time + 1

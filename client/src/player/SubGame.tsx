@@ -1,15 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
-import { fetchGame } from '../serverClient';
-import type { Player, GameAction } from '../../../types/';
-import { subscribe } from '../liveServerClient';
-import { GameController } from '../../../game-logic/GameController';
-import { RealtimeGameState } from '../../../types/realtime-types';
+import type { GameAction } from '../../../types/';
 import { useGameState } from '../main/useGameState';
 import { InfoContainer } from '../global-ui/InfoContainer';
 import { Typography } from '@mui/material';
+import { Grid } from './Grid';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     height: 100,
@@ -20,31 +17,6 @@ const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => (
     cursor: 'pointer'
 }));
 
-const GridContainer = styled('div')(({ n }: { n: number }) => ({
-    display: 'grid',
-    gridTemplateColumns: `repeat(${n}, 1fr)`, // Set the number of columns based on the size prop
-    gap: '2px', // This creates the space that looks like grid lines
-    backgroundColor: '#000', // Color for the grid lines
-}));
-
-const Cell = styled('div')({
-    backgroundColor: '#fff',
-    height: '100px',
-    width: 100,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center'
-});
-
-const Grid = ({ n, value, index }: { n: number, value: string | undefined, index: number }) => {
-    return (
-        <GridContainer n={n}>
-            {Array.from({ length: n * n }, (_, i) => (
-                <Cell key={`cell-${i}`}>{i === index ? value : ''}</Cell>
-            ))}
-        </GridContainer>
-    );
-};
 
 const mockActionsArray: GameAction[] = ['Seed', 'Harvest', 'PutMouse'] as unknown as GameAction[]
 
@@ -55,12 +27,14 @@ export function SubGame() {
         throw new Error("No key");
     }
 
-    const n = 3
 
-    const { gameState, handleStart } = useGameState(key)
+    const { gameState } = useGameState(key)
     const [actions, setActions] = useState<GameAction[]>(mockActionsArray)
     const [selectedAction, setSelectedAction] = useState<GameAction>()
-    const [actionGridIndex, setActionGridIndex] = useState()
+    const [cellID, setCellID] = useState('')
+
+
+    const n = Math.sqrt(gameState?.gc.grid.length || 0)
 
     const playerId = localStorage.getItem("playerId");
 
@@ -69,11 +43,19 @@ export function SubGame() {
         , [playerId, gameState])
 
 
+    const handleSetGrid = (cellId: string) => {
+        setCellID(cellID)
+    }
     if (gameState?.state === 'waiting') {
         return <Waiting />
     }
-    if (gameState?.state === 'simulating') {
-        return <div>Simulating</div>
+    // if (gameState?.state === 'simulating') {
+    //     return <div>Watch main screen for results</div>
+    // }
+
+
+    if (!gameState?.gc.grid) {
+        return <div></div>
     }
     return (
         <Box
@@ -92,10 +74,11 @@ export function SubGame() {
                 <Box>
                     Game {key}, Player {JSON.stringify(player)}
                 </Box>
-                <Grid n={n} value={selectedAction} index={5}></Grid>
+                <Grid grid={gameState?.gc.grid} value={cellID} onSet={handleSetGrid} selectecID={cellID}></Grid>
                 <Box display="flex" justifyContent="center">
                     {actions.map((action) =>
                         <Item
+                            key={action}
                             isSelected={selectedAction === action}
                             onClick={() => setSelectedAction(action)}>
                             {action}

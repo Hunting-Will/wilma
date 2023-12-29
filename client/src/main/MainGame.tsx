@@ -34,7 +34,7 @@ export function MainGame() {
 
     return (
         <Box display="flex" justifyContent="space-around">
-
+            {/* {gameState} */}
             {/* {game && <Left game={game} />} */}
             <Box
                 flexDirection="column"
