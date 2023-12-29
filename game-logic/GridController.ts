@@ -39,20 +39,23 @@ export class GridController {
     SimulateTurn(): TurnResults {
         var results: TurnResults = {};
         for (var cell of this.grid) {
-            var actionAmounts = cell.pendingActions.reduce((acc, { action }) => acc[action] == undefined ? acc[action] = 1 : acc[action] += 1, {});
+            var actionAmounts:Partial<Record<GameAction,number>> = {};
+            cell.pendingActions.forEach(a => {
+                actionAmounts[a.action] = (actionAmounts[a.action] ?? 0) + 1;
+            });
 
             for (var { action, player } of cell.pendingActions) {
                 results[player.ID] = results[player.ID] == undefined ? { scoreChange: 0 } : results[player.ID];
                 switch (action) {
                     case 'Harvest':
-                        if (actionAmounts['Poison'] > 0) {
+                        if ((actionAmounts['Poison'] ?? 0) > 0) {
                             results[player.ID].scoreChange -= cell.state.cellValue;
                         } else {
                             results[player.ID].scoreChange += cell.state.cellValue;
                         }
                         break;
                     case 'Poison':
-                        if (actionAmounts['Harvest'] < 1) {
+                        if ((actionAmounts['Harvest'] ?? 0) < 1) {
                             results[player.ID].scoreChange -= cell.state.cellValue / 2;
                         }
                         break;
@@ -62,13 +65,13 @@ export class GridController {
             }
             cell.pendingActions = [];
 
-            if (actionAmounts['Harvest'] > 0) {
+            if ((actionAmounts['Harvest']??0) > 0) {
                 cell.state = {
                     cellValue: 0,
                     growing: false
                 };
             }
-            if (cell.state.growing == false && actionAmounts['Seed'] > 0) {
+            if (cell.state.growing == false && (actionAmounts['Seed'] ??0) > 0) {
                 cell.state.growing = true;
             } else if (cell.state.growing == true) {
                 cell.state.cellValue += 1;
