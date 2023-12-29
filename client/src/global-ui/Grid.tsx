@@ -5,19 +5,20 @@ import { styled } from '@mui/system';
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${n}, 1fr)`,
-    gap: '2px',
-    backgroundColor: '#000', // Color for the grid lines
+    gap: '10px',
+    // backgroundColor: '#000'
 }));
 
 const Cell = styled('div')(({ n }: { n: number }) => ({
-    backgroundColor: '#fff',
     height: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
     width: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    cursor: 'pointer'
+    cursor: 'pointer',
+    backgroundColor: 'lightblue',
+    borderRadius: 10
 }));
 
 type Props = {

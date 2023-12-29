@@ -12,9 +12,9 @@ import { GameController } from "../../../game-logic/GameController";
 
 export function Left({ game }: { game: GameController }) {
   return (
-    <List style={{overflow: "auto"}}>
+    <List style={{ overflow: "auto" }}>
       {game.players.map((p) => (
-        <PlayerCard player={p} />
+        <PlayerCard key={p.ID} player={p} />
       ))}
     </List>
   );
