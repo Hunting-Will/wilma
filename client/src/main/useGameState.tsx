@@ -10,7 +10,7 @@ import {
 import { GameController } from "../../../game-logic/GameController";
 
 
-const turnTime = 20
+const turnTime = 6
 
 export const useGameState = (key: string) => {
     const [gameState, setGameState] = useState<GameController>();

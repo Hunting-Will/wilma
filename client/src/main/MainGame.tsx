@@ -30,7 +30,7 @@ export function MainGame() {
   }
 
   return (
-    <Box display="flex" style={{height: "100vh"}} justifyContent="space-around">
+    <Box display="flex" style={{ height: "100vh" }} justifyContent="space-around">
       <Left game={gameState} />
       <Box
         flexDirection="column"
@@ -51,7 +51,7 @@ export function MainGame() {
             <Typography variant="h5">{time}</Typography>
           </InfoContainer>
         )}
-        <Board />
+        <Board grid={gameState.gc.grid} />
       </Box>
       <Right players={gameState.players} />
     </Box>

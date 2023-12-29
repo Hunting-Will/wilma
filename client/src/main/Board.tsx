@@ -1,32 +1,33 @@
-import { Box } from '@mui/material';
-import { Game } from '../../../types';
-
+import { GridCell } from "../../../types";
 import { styled } from '@mui/system';
 
-const Tile = styled('div')({
-    backgroundColor: 'lightblue',
-    width: 200,
-    height: 200,
-    borderRadius: '8px',
-    margin: 5
-});
+const GridContainer = styled('div')(({ n }: { n: number }) => ({
+    display: 'grid',
+    gridTemplateColumns: `repeat(${n}, 1fr)`,
+    gap: '2px',
+    backgroundColor: '#000', // Color for the grid lines
+}));
 
-export function Board() {
+const Cell = styled('div')(({ n }: { n: number }) => ({
+    backgroundColor: '#fff',
+    height: `calc((100vh - 200px) / ${n})`,
+    width: `calc((100vh - 200px) / ${n})`,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    cursor: 'pointer'
+}));
 
-    const n = 3
 
-    const rows = new Array(n).fill(null);
-    const columns = new Array(n).fill(null);
+export const Board = ({ grid }: { grid: GridCell[] }) => {
+    const n = Math.sqrt(grid.length)
 
     return (
-        <Box flexDirection="column" display="flex">
-            {rows.map((_, rowIndex) => (
-                <Box key={rowIndex} display="flex">
-                    {columns.map((_, columnIndex) => (
-                        <Tile key={columnIndex} />
-                    ))}
-                </Box>
-            ))}
-        </Box>
+        <GridContainer n={n}>
+            {grid.map((c) => (
+                <Cell key={`cell-${c.ID}`} n={n}>{c.state.cellValue}</Cell>
+            ))
+            }
+        </GridContainer >
     );
-}
+};
