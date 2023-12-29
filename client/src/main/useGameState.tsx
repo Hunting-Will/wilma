@@ -40,8 +40,6 @@ export const useGameState = (key: string) => {
         }
     };
 
-    subscribe(key, handleData);
-
     const handleStart = async () => {
         await waitForChoices(key);
         startChoicesLoop();
