@@ -41,9 +41,12 @@ export class GameController {
 
     public SimulateTurn(): TurnResults {
         this.state = 'simulating'
-        var results = this.gc.SimulateTurn();
-        for (var playerID in Object.keys(results)) {
-            this.players[playerID].Score += results[playerID].scoreChange;
+        const results = this.gc.SimulateTurn();
+        const arr = Object.keys(results)
+        for (const playerID of Object.keys(results)) {
+
+            const player = this.players.find(p => p.ID === playerID)
+            player && (player.Score += results[playerID].scoreChange);
         }
         console.log('simulated')
         console.log(JSON.stringify(results))

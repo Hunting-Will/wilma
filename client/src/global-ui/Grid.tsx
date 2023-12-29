@@ -9,7 +9,7 @@ const GridContainer = styled('div')(({ n }: { n: number }) => ({
     // backgroundColor: '#000'
 }));
 
-const Cell = styled('div')(({ n }: { n: number }) => ({
+const Cell = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean }) => ({
     height: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
     width: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
     display: 'flex',
@@ -17,7 +17,7 @@ const Cell = styled('div')(({ n }: { n: number }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    backgroundColor: 'lightblue',
+    backgroundColor: isGrowing ? 'lightgreen' : 'lightblue',
     borderRadius: 10
 }));
 
@@ -34,10 +34,10 @@ export const Grid = ({ grid, cellID, onSet, value }: Props) => {
     return (
         <GridContainer n={n}>
             {grid?.map((c) => (
-                <Cell key={c.ID} onClick={() => onSet?.(c.ID)} n={n}>
+                <Cell key={c.ID} onClick={() => onSet?.(c.ID)} n={n} isGrowing={c.state.growing}>
                     <Box>{c.ID === cellID ? value : ''}</Box>
                     <Box>{c.state.cellValue}</Box>
-
+                    {c.state.growing}
                 </Cell>
             ))}
         </GridContainer>

@@ -29,6 +29,9 @@ function PlayerCard({ player }: { player: Player }) {
       <ListItemText>
         <Typography>{player.Nickname}</Typography>
       </ListItemText>
+      <ListItemText>
+        <Typography marginLeft={3}>{player.Score}</Typography>
+      </ListItemText>
     </ListItem>
   );
 }
