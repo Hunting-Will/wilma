@@ -1,6 +1,7 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { GameAction, GridCell } from "../../../types";
 import { styled } from '@mui/system';
+import { useEffect, useRef, useState } from "react";
 
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
     display: 'grid',
@@ -9,7 +10,7 @@ const GridContainer = styled('div')(({ n }: { n: number }) => ({
     // backgroundColor: '#000'
 }));
 
-const Cell = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean }) => ({
+const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean }) => ({
     height: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
     width: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
     display: 'flex',
@@ -20,6 +21,24 @@ const Cell = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean })
     backgroundColor: isGrowing ? 'lightgreen' : 'lightblue',
     borderRadius: 10
 }));
+
+const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number, isGrowing: boolean, children: React.ReactNode, onClick: () => void, c: GridCell }) => {
+    const lastValue = useRef(-100)
+    const [vChange, setVChange] = useState<number | undefined>()
+    useEffect(() => {
+        if (lastValue.current !== -100 && v !== lastValue.current) {
+            setVChange(v - lastValue.current)
+        }
+        lastValue.current = v
+    }, [c, v])
+    return (
+        <CellDiv onClick={onClick} n={n} isGrowing={isGrowing}>
+            {children}
+            <Typography variant="h3">{v}</Typography>
+            <Typography variant="h5">{vChange}</Typography>
+        </CellDiv>
+    )
+}
 
 type Props = {
     grid?: GridCell[],
@@ -34,10 +53,8 @@ export const Grid = ({ grid, cellID, onSet, value }: Props) => {
     return (
         <GridContainer n={n}>
             {grid?.map((c) => (
-                <Cell key={c.ID} onClick={() => onSet?.(c.ID)} n={n} isGrowing={c.state.growing}>
+                <Cell key={c.ID} c={c} onClick={() => onSet?.(c.ID)} n={n} isGrowing={c.state.growing} v={c.state.cellValue}>
                     <Box>{c.ID === cellID ? value : ''}</Box>
-                    <Box>{c.state.cellValue}</Box>
-                    {c.state.growing}
                 </Cell>
             ))}
         </GridContainer>
