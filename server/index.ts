@@ -2,8 +2,9 @@ import Koa from 'koa'
 import Router from '@koa/router';
 import bodypareser from 'koa-bodyparser';
 import cors from '@koa/cors'
+import http from 'http';
 
-import { RealtimeServer } from './realtime-server/RealtimeServer';
+import { RealtimeServer, init } from './realtime-server/RealtimeServer';
 import { GameController } from '../game-logic/GameController';
 import { getGame, setGame } from './gamesManager'
 import { GameAction, GridCell } from '../types';
@@ -126,5 +127,9 @@ app.on('error', (err, ctx) => {
 });
 
 const port = parseInt(process.env.PORT) || 3001
-app.listen(port);
-console.log(`Starting server on ${port}`)
+const server = http.createServer(app.callback());
+init(server)
+
+server.listen(port, () => {
+  console.log(`Starting server on ${port}`);
+});

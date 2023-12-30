@@ -9,8 +9,54 @@ import { GameController } from "../../game-logic/GameController";
 import { TurnResults } from "../../types";
 
 const PORT = parseInt(process.env.PORT) || 3002;
-const server = new ws.Server({ port: PORT });
+let server;
 const gameToClients: { [key: string]: ws.WebSocket[] } = {};
+
+export const init = (server) => {
+  server = new ws.Server({ server })
+
+  server.on("connection", (ws: ws.WebSocket, request) => {
+    const urlParams = new URLSearchParams(request.url.substring(1));
+    const gameID = urlParams.get("gameID");
+    if (!gameToClients[gameID]) {
+      gameToClients[gameID] = [];
+    }
+    console.log("connecting real time client to game ", gameID);
+    gameToClients[gameID].push(ws);
+
+    ws.on("close", () => {
+      const i = gameToClients[gameID].indexOf(ws);
+      if (i !== -1) {
+        gameToClients[gameID].splice(i, 1);
+      }
+    });
+
+    ws.on("message", async (message: string) => {
+      try {
+        const data = JSON.parse(message) as RealtimeMessage;
+        const route = realtimeRoutes[data.route];
+        if (!route) {
+          const err: RealtimeError = {
+            type: "Error",
+            error: data,
+            message: "Route not found",
+          };
+          ws.send(JSON.stringify(err));
+        } else {
+          route(ws, data.payload);
+        }
+      } catch (error) {
+        ws.send(
+          JSON.stringify({
+            type: "Error",
+            message: "Error processing message",
+            error,
+          } as RealtimeError)
+        );
+      }
+    });
+  });
+}
 
 const realtimeRoutes: { [key: RealtimeRoute["path"]]: RealtimeRoute["func"] } =
   {};
@@ -46,46 +92,5 @@ export const RealtimeServer = {
   ...server,
 };
 
-server.on("connection", (ws: ws.WebSocket, request) => {
-  const urlParams = new URLSearchParams(request.url.substring(1));
-  const gameID = urlParams.get("gameID");
-  if (!gameToClients[gameID]) {
-    gameToClients[gameID] = [];
-  }
-  console.log("connecting real time client to game ", gameID);
-  gameToClients[gameID].push(ws);
-
-  ws.on("close", () => {
-    const i = gameToClients[gameID].indexOf(ws);
-    if (i !== -1) {
-      gameToClients[gameID].splice(i, 1);
-    }
-  });
-
-  ws.on("message", async (message: string) => {
-    try {
-      const data = JSON.parse(message) as RealtimeMessage;
-      const route = realtimeRoutes[data.route];
-      if (!route) {
-        const err: RealtimeError = {
-          type: "Error",
-          error: data,
-          message: "Route not found",
-        };
-        ws.send(JSON.stringify(err));
-      } else {
-        route(ws, data.payload);
-      }
-    } catch (error) {
-      ws.send(
-        JSON.stringify({
-          type: "Error",
-          message: "Error processing message",
-          error,
-        } as RealtimeError)
-      );
-    }
-  });
-});
 
 console.log(`WebSocket server started on port ${PORT}`);

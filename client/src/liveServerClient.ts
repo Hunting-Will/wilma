@@ -1,7 +1,7 @@
 import { RealtimeServerResponse } from '../../types/realtime-types'
 
-// const path = 'ws://wilma-server.onrender.com'
-const path = 'ws://localhost:3002'
+const path = 'ws://wilma-server.onrender.com'
+// const path = 'ws://localhost:3001'
 
 export const subscribe = (key: string, callback: (message: RealtimeServerResponse) => void) => {
     const ws = new WebSocket(`${path}?gameID=${key}`);
