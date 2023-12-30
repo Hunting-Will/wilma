@@ -21,16 +21,17 @@ const actions: GameAction[] = ['Seed', 'Harvest', 'Poison'] as unknown as GameAc
 
 export function SubGame() {
     const { key } = useParams();
+    const playerId = localStorage.getItem("playerId");
 
-    if (!key) {
-        throw new Error("No key");
+    if (!key || !playerId) {
+        throw new Error("No key or playerId");
     }
 
-    const { gameState } = useGameState(key)
+    const { gameState, turnResults } = useGameState(key)
     const [selectedAction, setSelectedAction] = useState<GameAction>()
     const [cellID, setCellID] = useState('')
 
-    const playerId = localStorage.getItem("playerId");
+
 
     const player = useMemo(() =>
         gameState?.players.find(({ ID }) => ID === playerId)
@@ -63,8 +64,8 @@ export function SubGame() {
             <Typography textAlign="center" variant="h3">
                 Simulating turn..
             </Typography>
-            <Typography textAlign="center" variant="h3">
-
+            <Typography textAlign="center" variant="h4">
+                You got {turnResults?.results[playerId].scoreChange} points
             </Typography>
         </Box>
     }
