@@ -1,7 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, Zoom } from "@mui/material";
 import { GameAction, GridCell } from "../../../types";
 import { styled } from '@mui/system';
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
     display: 'grid',
@@ -19,23 +19,41 @@ const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean
     alignItems: 'center',
     cursor: 'pointer',
     backgroundColor: isGrowing ? 'lightgreen' : 'lightblue',
-    borderRadius: 10
+    borderRadius: 10,
+    position: 'relative'
 }));
 
 const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number, isGrowing: boolean, children: React.ReactNode, onClick: () => void, c: GridCell }) => {
     const lastValue = useRef(-100)
     const [vChange, setVChange] = useState<number | undefined>()
+    const [animateScore, setAnimateScore] = useState(false)
+    const timer = useRef<NodeJS.Timeout>()
+
+    const startPointAnimation = useCallback(() => {
+        if (timer.current) {
+            clearTimeout(timer.current)
+        }
+        setAnimateScore(true)
+        timer.current = setTimeout(() => setAnimateScore(false), 3000)
+    }, [setAnimateScore])
+
     useEffect(() => {
         if (lastValue.current !== -100 && v !== lastValue.current) {
             setVChange(v - lastValue.current)
+            startPointAnimation()
         }
         lastValue.current = v
-    }, [c, v])
+    }, [c, v, startPointAnimation])
+
     return (
         <CellDiv onClick={onClick} n={n} isGrowing={isGrowing}>
             {children}
             <Typography variant="h3">{v}</Typography>
-            <Typography variant="h5">{vChange}</Typography>
+            <Zoom in={animateScore}>
+                <Box position="absolute" left={3} top={3}>
+                    <Typography variant="h4">{vChange && vChange > 0 ? '+' : '-'}{vChange}</Typography>
+                </Box>
+            </Zoom>
         </CellDiv>
     )
 }
