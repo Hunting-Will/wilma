@@ -45,23 +45,28 @@ export class GridController {
             });
 
             for (var { action, player } of cell.pendingActions) {
-                results[player.ID] = results[player.ID] == undefined ? { scoreChange: 0 } : results[player.ID];
+                results[player.ID] = results[player.ID] == undefined ? { scoreChange: 0, cause: "none" } : results[player.ID];
                 switch (action) {
                     case 'Harvest':
                         const harvesters = (actionAmounts['Harvest'] ?? 0);
                         if ((actionAmounts['Poison'] ?? 0) > 0) {
                             results[player.ID].scoreChange -= cell.state.cellValue / harvesters;
+                            results[player.ID].cause = "harvest-poisoned";
                         } else {
                             results[player.ID].scoreChange += cell.state.cellValue / harvesters;
+                            results[player.ID].cause = "harvested";
                         }
                         break;
                     case 'Poison':
                         if ((actionAmounts['Harvest'] ?? 0) < 1) {
                             results[player.ID].scoreChange -= cell.state.cellValue / 2;
+                            results[player.ID].cause = "poisoned-failed";
                         }
                         break;
                     case 'Seed':
                         results[player.ID].scoreChange += SEEDING_POINTS;
+                        results[player.ID].cause = "seeded";
+                        break;
                 }
             }
             cell.pendingActions = [];

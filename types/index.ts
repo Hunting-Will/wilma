@@ -17,9 +17,11 @@ export type PlayerAction = {
     action: GameAction
 }
 
+export type Causes = "harvest-poisoned" | "harvested" | "seeded" | "poisoned-failed" | "none"
 export type TurnResults = {
     [key: Player['ID']]: {
         scoreChange: number
+        cause: Causes
     }
 }
 

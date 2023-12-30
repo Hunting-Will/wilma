@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
-import type { GameAction } from '../../../types/';
+import type { Causes, GameAction } from '../../../types/';
 import { useGameState } from '../main/useGameState';
 import { Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
@@ -19,6 +19,11 @@ const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => (
 
 const actions: GameAction[] = ['Seed', 'Harvest', 'Poison'] as unknown as GameAction[]
 
+
+const causes: Record<Causes, string> = {
+    "harvest-poisoned": "harversed a poisoned tile",
+    "harvested": "harversted a tile :>", "seeded": 'planted a seed', "poisoned-failed": 'didnt poison', "none": 'missed your turn :<'
+}
 export function SubGame() {
     const { key } = useParams();
     const playerId = localStorage.getItem("playerId");
@@ -60,12 +65,17 @@ export function SubGame() {
         return <Lobby />
     }
     if (gameState?.state === 'simulating') {
+        const result = turnResults?.results[playerId]
+        if (!result) {
+            return <Box></Box>
+        }
         return <Box>
             <Typography textAlign="center" variant="h3">
                 Simulating turn..
             </Typography>
             <Typography textAlign="center" variant="h4">
-                You got {turnResults?.results[playerId].scoreChange} points
+                You got {result.scoreChange} points
+                because you {causes[result.cause]}
             </Typography>
         </Box>
     }
