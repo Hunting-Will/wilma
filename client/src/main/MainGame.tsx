@@ -28,6 +28,8 @@ export function MainGame() {
     );
   }
 
+  const playersDone = gameState.gc.grid.reduce((acc,cell) => acc+cell.pendingActions.length, 0);
+
   return (
     <Box display="flex" style={{ height: "100vh" }} justifyContent="space-around">
       <Left game={gameState} />
@@ -51,6 +53,7 @@ export function MainGame() {
               End
             </Button>
             <Typography variant="h5">Select your action!  </Typography>
+            <Typography variant="h5">{playersDone}/{gameState.players.length} players chose</Typography>
             <Typography variant="h5">{time}</Typography>
           </InfoContainer>
         )}
