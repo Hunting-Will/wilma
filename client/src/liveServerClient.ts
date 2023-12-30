@@ -1,6 +1,6 @@
 import { RealtimeServerResponse } from '../../types/realtime-types'
 
-const path = 'ws://wilma-server.onrender.com'
+const path = 'wss://wilma-server.onrender.com'
 // const path = 'ws://localhost:3001'
 
 export const subscribe = (key: string, callback: (message: RealtimeServerResponse) => void) => {
