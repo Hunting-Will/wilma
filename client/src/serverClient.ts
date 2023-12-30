@@ -2,7 +2,7 @@ import { GameController } from '../../game-logic/GameController';
 import { Game, GameAction } from '../../types/index'
 
 // const baseUrl = 'http://localhost:3001';
-const baseUrl = process.env.ENV === 'prod' ? 'https://wilma-server.onrender.com' : 'http://localhost:3001';
+const baseUrl = 'https://wilma-server.onrender.com';
 
 export const joinGame = (id: string, nickname: string): Promise<{ playerId: string }> =>
     fetch(`${baseUrl}/api/joinGame/${id}/${nickname}`).then(res => res.json())
