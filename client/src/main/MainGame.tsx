@@ -50,7 +50,7 @@ export function MainGame() {
             <Button variant="outlined" onClick={handleSimulateTurn}>
               End
             </Button>
-            <Typography variant="h5">Choose your action!</Typography>
+            <Typography variant="h5">Select your action!  </Typography>
             <Typography variant="h5">{time}</Typography>
           </InfoContainer>
         )}
@@ -79,14 +79,20 @@ export const Lobby = ({
     >
       <InfoContainer>
         <Typography variant="h2" component="h2">
-          Join the game using {gameKey}
+          Join the game using <strong>{gameKey}</strong> At
+
+        </Typography>
+        <Typography variant="h5" component="h2">
+          {window.location.origin}/join
         </Typography>
         <Typography variant="h4">
           {players.map((p) => p.Nickname).join(", ")}
         </Typography>
-        <Button variant="outlined" onClick={onStart}>
-          Start
-        </Button>
+        <Box marginTop={2}>
+          <Button variant="outlined" onClick={onStart} >
+            Start
+          </Button>
+        </Box>
       </InfoContainer>
     </Box>
   </Box>

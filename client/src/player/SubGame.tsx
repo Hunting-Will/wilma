@@ -10,10 +10,8 @@ import { setAction } from '../serverClient';
 import { Lobby } from './Lobby';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
-    height: 100,
-    width: 100,
-    margin: 20,
-    padding: 10,
+    margin: 10,
+    padding: 30,
     border: `1px solid ${isSelected ? 'lightgreen' : 'lightgray'}`,
     cursor: 'pointer'
 }));
@@ -62,8 +60,11 @@ export function SubGame() {
     }
     if (gameState?.state === 'simulating') {
         return <Box>
-            <Typography variant="h2" component="h2">
-                Watch main screen for results
+            <Typography textAlign="center" variant="h3">
+                Simulating turn..
+            </Typography>
+            <Typography textAlign="center" variant="h3">
+
             </Typography>
         </Box>
     }
@@ -86,7 +87,7 @@ export function SubGame() {
                     Game {key}, Player {JSON.stringify(player)}
                 </Box>
                 <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} value={selectedAction}></Grid>
-                <Box display="flex" justifyContent="center">
+                <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
                     {actions.map((action) =>
                         <Item
                             key={action}
@@ -97,6 +98,6 @@ export function SubGame() {
                     )}
                 </Box>
             </Box>
-        </Box>
+        </Box >
     );
 }

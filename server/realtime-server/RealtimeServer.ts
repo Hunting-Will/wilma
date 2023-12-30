@@ -8,7 +8,6 @@ import {
 import { GameController } from "../../game-logic/GameController";
 import { TurnResults } from "../../types";
 
-const PORT = parseInt(process.env.PORT) || 3002;
 let server;
 const gameToClients: { [key: string]: ws.WebSocket[] } = {};
 
@@ -91,6 +90,3 @@ export const RealtimeServer = {
   },
   ...server,
 };
-
-
-console.log(`WebSocket server started on port ${PORT}`);

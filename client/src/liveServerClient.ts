@@ -8,8 +8,6 @@ export const subscribe = (key: string, callback: (message: RealtimeServerRespons
 
     ws.addEventListener("message", (m) => {
         const parsed = JSON.parse(m.data);
-        if (parsed.type === "GameState") {
-            callback(parsed as RealtimeServerResponse);
-        }
+        callback(parsed as RealtimeServerResponse);
     });
 }

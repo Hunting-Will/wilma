@@ -15,7 +15,9 @@ const turnTime = 6
 let interval: NodeJS.Timer;
 
 export const useGameState = (key: string) => {
-    const [gameState, setGameState] = useState<GameController>();
+    const [gameState, setGameState] = useState<GameController>()
+    const [turnResults, setTurnResults] = useState<RealtimeTurnResults>()
+
     const [time, setTime] = useState(0)
 
     useEffect(() => {
@@ -42,7 +44,7 @@ export const useGameState = (key: string) => {
         }
 
         if (isRealtimeTurnResults(data)) {
-            console.log('results', data)
+            setTurnResults(data)
         }
     };
 
@@ -63,13 +65,12 @@ export const useGameState = (key: string) => {
                 if (time + 1 >= turnTime) {
                     // handleSimulateTurn()
                 }
-                console.log(time);
                 return time + 1
             });
         }, 1000);
     };
 
-    return { gameState, handleStart, time, handleSimulateTurn };
+    return { gameState, handleStart, time, handleSimulateTurn, turnResults };
 };
 
 // TODO: move to some typings file
