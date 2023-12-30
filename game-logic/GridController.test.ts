@@ -1,35 +1,36 @@
 import { Player, PlayerAction } from '../types';
-import {GridController} from './GridController';
+import { GridController } from './GridController';
 
-describe("grid controller", ()=>{
+describe("grid controller", () => {
     let gc: GridController;
-    let samplePlayer1:Player ={ID: "1", Nickname: "AlexHomo", Score: 0}
-    let samplePlayer2:Player ={ID: "2", Nickname: "LiorGever", Score: 0}
+    let samplePlayer1: Player = { ID: "1", Nickname: "AlexHomo", Score: 0 }
+    let samplePlayer2: Player = { ID: "2", Nickname: "LiorGever", Score: 0 }
+    let samplePlayer3: Player = { ID: "3", Nickname: "LiorTotah", Score: 0 }
 
     beforeEach(() => {
-       gc = new GridController(3,3)
+        gc = new GridController(3, 3)
     });
 
-    describe("player actions", () =>{
+    describe("player actions", () => {
         it('adds player action', () => {
             gc.SetPlayerAction(samplePlayer1, "Poison", gc.grid[0].ID);
-            const expected:PlayerAction[] = [{action: "Poison", player: samplePlayer1}];
+            const expected: PlayerAction[] = [{ action: "Poison", player: samplePlayer1 }];
             expect(gc.grid[0].pendingActions).toEqual(expected);
         });
-    
+
         it('adds two players same action', () => {
             gc.SetPlayerAction(samplePlayer1, "Poison", gc.grid[0].ID);
             gc.SetPlayerAction(samplePlayer2, "Poison", gc.grid[0].ID);
-            const expected:PlayerAction[] = [{action: "Poison", player: samplePlayer1}, {action: "Poison", player: samplePlayer2}];
+            const expected: PlayerAction[] = [{ action: "Poison", player: samplePlayer1 }, { action: "Poison", player: samplePlayer2 }];
             expect(gc.grid[0].pendingActions).toEqual(expected);
         });
-    
+
         it('replaces player action', () => {
             gc.SetPlayerAction(samplePlayer1, "Poison", gc.grid[0].ID);
             gc.SetPlayerAction(samplePlayer2, "Poison", gc.grid[0].ID);
             gc.SetPlayerAction(samplePlayer1, "PutMouse", gc.grid[1].ID);
-            const expectedCell1:PlayerAction[] = [{action: "Poison", player: samplePlayer2}];
-            const expectedCell2:PlayerAction[] = [{action: "PutMouse", player: samplePlayer1}];
+            const expectedCell1: PlayerAction[] = [{ action: "Poison", player: samplePlayer2 }];
+            const expectedCell2: PlayerAction[] = [{ action: "PutMouse", player: samplePlayer1 }];
             expect(gc.grid[0].pendingActions).toEqual(expectedCell1);
             expect(gc.grid[1].pendingActions).toEqual(expectedCell2);
         });
@@ -66,8 +67,8 @@ describe("grid controller", ()=>{
             gc.SetPlayerAction(samplePlayer1, "Harvest", gc.grid[0].ID);
             gc.SetPlayerAction(samplePlayer2, "Harvest", gc.grid[0].ID);
             const results = gc.SimulateTurn();
-            expect(results[samplePlayer1.ID].scoreChange).toBe(2);
-            expect(results[samplePlayer2.ID].scoreChange).toBe(2);
+            expect(results[samplePlayer1.ID].scoreChange).toBe(1);
+            expect(results[samplePlayer2.ID].scoreChange).toBe(1);
         });
 
         it('stops growing after harvest', () => {
@@ -91,12 +92,34 @@ describe("grid controller", ()=>{
             expect(results[samplePlayer2.ID].scoreChange).toEqual(0);
         });
 
+        it('gives correct points to all players when harvesting poison', () => {
+            gc.SetPlayerAction(samplePlayer1, "Seed", gc.grid[0].ID);
+            gc.SimulateTurn();
+            gc.SimulateTurn();
+            gc.SetPlayerAction(samplePlayer1, "Harvest", gc.grid[0].ID);
+            gc.SetPlayerAction(samplePlayer2, "Harvest", gc.grid[0].ID);
+            gc.SetPlayerAction(samplePlayer3, "Poison", gc.grid[0].ID);
+            const results = gc.SimulateTurn();
+            expect(results[samplePlayer1.ID].scoreChange).toEqual(-1);
+            expect(results[samplePlayer2.ID].scoreChange).toEqual(-1);
+        });
+
         it('gives correct points when poisoning with no harvesters', () => {
             gc.SetPlayerAction(samplePlayer1, "Seed", gc.grid[0].ID);
             gc.SimulateTurn();
             gc.SetPlayerAction(samplePlayer1, "Poison", gc.grid[0].ID);
             const results = gc.SimulateTurn();
             expect(results[samplePlayer1.ID].scoreChange).toEqual(-0.5);
+        });
+
+        it('gives correct points to all players when poisoning with no harvesters', () => {
+            gc.SetPlayerAction(samplePlayer1, "Seed", gc.grid[0].ID);
+            gc.SimulateTurn();
+            gc.SetPlayerAction(samplePlayer1, "Poison", gc.grid[0].ID);
+            gc.SetPlayerAction(samplePlayer2, "Poison", gc.grid[0].ID);
+            const results = gc.SimulateTurn();
+            expect(results[samplePlayer1.ID].scoreChange).toEqual(-0.50);
+            expect(results[samplePlayer2.ID].scoreChange).toEqual(-0.50);
         });
     });
 })

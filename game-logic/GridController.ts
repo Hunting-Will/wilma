@@ -39,7 +39,7 @@ export class GridController {
     SimulateTurn(): TurnResults {
         var results: TurnResults = {};
         for (var cell of this.grid) {
-            var actionAmounts:Partial<Record<GameAction,number>> = {};
+            var actionAmounts: Partial<Record<GameAction, number>> = {};
             cell.pendingActions.forEach(a => {
                 actionAmounts[a.action] = (actionAmounts[a.action] ?? 0) + 1;
             });
@@ -48,10 +48,11 @@ export class GridController {
                 results[player.ID] = results[player.ID] == undefined ? { scoreChange: 0 } : results[player.ID];
                 switch (action) {
                     case 'Harvest':
+                        const harvesters = (actionAmounts['Harvest'] ?? 0);
                         if ((actionAmounts['Poison'] ?? 0) > 0) {
-                            results[player.ID].scoreChange -= cell.state.cellValue;
+                            results[player.ID].scoreChange -= cell.state.cellValue / harvesters;
                         } else {
-                            results[player.ID].scoreChange += cell.state.cellValue;
+                            results[player.ID].scoreChange += cell.state.cellValue / harvesters;
                         }
                         break;
                     case 'Poison':
@@ -65,14 +66,15 @@ export class GridController {
             }
             cell.pendingActions = [];
 
-            if ((actionAmounts['Harvest']??0) > 0) {
+            if ((actionAmounts['Harvest'] ?? 0) > 0) {
                 cell.state = {
                     cellValue: 0,
                     growing: false
                 };
             }
-            if (cell.state.growing == false && (actionAmounts['Seed'] ??0) > 0) {
+            if (cell.state.growing == false && (actionAmounts['Seed'] ?? 0) > 0) {
                 cell.state.growing = true;
+                cell.state.cellValue += 1;
             } else if (cell.state.growing == true) {
                 cell.state.cellValue += 1;
             }
