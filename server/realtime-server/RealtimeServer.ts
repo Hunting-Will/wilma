@@ -8,7 +8,8 @@ import {
 import { GameController } from "../../game-logic/GameController";
 import { TurnResults } from "../../types";
 
-const server = new ws.Server({ port: 8080 });
+const PORT = parseInt(process.env.PORT) || 3002;
+const server = new ws.Server({ port: PORT });
 const gameToClients: { [key: string]: ws.WebSocket[] } = {};
 
 const realtimeRoutes: { [key: RealtimeRoute["path"]]: RealtimeRoute["func"] } =
@@ -36,7 +37,7 @@ export const RealtimeServer = {
     gameToClients[gameID].forEach((c) => c.send(JSON.stringify(message)));
   },
   EmitGameResults: (gameID: string, results: TurnResults) => {
-    const message: RealtimeTurnResults = {type: "TurnResults", results };
+    const message: RealtimeTurnResults = { type: "TurnResults", results };
     if (!gameToClients[gameID]) {
       gameToClients[gameID] = [];
     }
@@ -87,4 +88,4 @@ server.on("connection", (ws: ws.WebSocket, request) => {
   });
 });
 
-console.log("WebSocket server started on port 8080");
+console.log(`WebSocket server started on port ${PORT}`);
