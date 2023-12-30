@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/12809065-38bc-4b64-99ac-061a73cb9b92/resourceGroups/wilma-server_group/providers/Microsoft.Web/sites/wilma-server",
+    "appService.deploySubpath": "."
+}

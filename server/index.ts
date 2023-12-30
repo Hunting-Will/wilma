@@ -125,6 +125,6 @@ app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
 });
 
-const port = 3001
-app.listen(port, "0.0.0.0");
+const port = parseInt(process.env.PORT) || 3001
+app.listen(port);
 console.log(`Starting server on ${port}`)
