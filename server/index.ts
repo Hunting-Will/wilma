@@ -27,22 +27,13 @@ app.use(async (ctx, next) => {
 });
 
 
-router.get('/createGame/:name', async (ctx) => {
-  const { name } = ctx.params;
-
-  if (!name) {
-    ctx.status = 400;
-    ctx.body = { error: 'Name is required' };
-    return;
-  }
-
+router.post('/createGame', async (ctx) => {
   const game = new GameController(3, 3)
 
   setGame(game.key, game);
 
   ctx.body = {
     message: 'Game created successfully',
-    name,
     gameId: game.key
   };
 });

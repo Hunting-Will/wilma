@@ -22,7 +22,7 @@ const actions: GameAction[] = ['Seed', 'Harvest', 'Poison'] as unknown as GameAc
 
 const causes: Record<Causes, string> = {
     "harvest-poisoned": "harversed a poisoned tile",
-    "harvested": "harversted a tile :>", "seeded": 'planted a seed', "poisoned-failed": 'didnt poison', "none": 'missed your turn :<'
+    "harvested": "harvesting a tile :>", "seeded": 'planting a seed', "poisoned-failed": 'failed poisoning :<', "none": 'missed your turn :<'
 }
 export function SubGame() {
     const { key } = useParams();
@@ -71,11 +71,11 @@ export function SubGame() {
         }
         return <Box>
             <Typography textAlign="center" variant="h3">
-                Simulating turn..
+                Turn concluded
             </Typography>
             <Typography textAlign="center" variant="h4">
                 You got {result.scoreChange} points
-                because you {causes[result.cause]}
+                for {causes[result.cause]}
             </Typography>
         </Box>
     }
@@ -95,7 +95,7 @@ export function SubGame() {
                 height="90vh"
             >
                 <Box>
-                    Game {key}, Player {JSON.stringify(player)}
+                    <Typography variant="h3"> {player?.Nickname}, {player?.Score}</Typography>
                 </Box>
                 <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} value={selectedAction}></Grid>
                 <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>

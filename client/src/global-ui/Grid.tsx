@@ -34,7 +34,7 @@ const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number,
             clearTimeout(timer.current)
         }
         setAnimateScore(true)
-        timer.current = setTimeout(() => setAnimateScore(false), 3000)
+        timer.current = setTimeout(() => setAnimateScore(false), 5000)
     }, [setAnimateScore])
 
     useEffect(() => {
@@ -51,7 +51,7 @@ const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number,
             <Typography variant="h3">{v}</Typography>
             <Zoom in={animateScore}>
                 <Box position="absolute" left={3} top={3}>
-                    <Typography variant="h4">{vChange && vChange > 0 ? '+' : '-'}{vChange}</Typography>
+                    <Typography variant="h4">{vChange && vChange > 0 ? '+' : ''}{vChange}</Typography>
                 </Box>
             </Zoom>
         </CellDiv>

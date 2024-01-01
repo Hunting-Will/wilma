@@ -25,10 +25,10 @@ function PlayerCard({ player }: { player: Player }) {
         <Avatar>{player.Nickname[0]}</Avatar>
       </ListItemAvatar>
       <ListItemText>
-        <Typography>{player.Nickname}</Typography>
+        <Typography variant="h6">{player.Nickname}</Typography>
       </ListItemText>
       <ListItemText>
-        <Typography marginLeft={3}>{player.Score}</Typography>
+        <Typography variant="h6" marginLeft={3}>{player.Score}</Typography>
       </ListItemText>
     </ListItem>
   );
