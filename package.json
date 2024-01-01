@@ -11,7 +11,9 @@
   "workspaces": [
     "client",
     "server",
-    "game-logic"
+    "game-logic",
+    "types",
+    "e2e"
   ],
   "author": "",
   "license": "ISC",

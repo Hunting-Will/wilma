@@ -7,13 +7,13 @@ import http from 'http';
 import { RealtimeServer, init } from './realtime-server/RealtimeServer';
 import { GameController } from '../game-logic/GameController';
 import { getGame, setGame } from './gamesManager'
-import { GameAction, GridCell } from '../types';
+import { GameAction, GridCell } from '@wilma/types';
 
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 const router = new Router({ prefix: '/api' });
 
-const app = new Koa();
+export const app = new Koa();
 app.use(cors())
 app.use(bodypareser())
 

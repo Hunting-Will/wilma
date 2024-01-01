@@ -1,4 +1,4 @@
-import { Player, PlayerAction } from '../types';
+import { Player, PlayerAction } from '@wilma/types';
 import { GridController } from './GridController';
 
 describe("grid controller", () => {

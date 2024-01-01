@@ -1,5 +1,5 @@
 import { Box, Typography, Zoom } from "@mui/material";
-import { GameAction, GridCell } from "../../../types";
+import { GameAction, GridCell } from "@wilma/types";
 import { styled } from '@mui/system';
 import { useCallback, useEffect, useRef, useState } from "react";
 

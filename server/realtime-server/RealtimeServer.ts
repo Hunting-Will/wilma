@@ -4,9 +4,9 @@ import {
   RealtimeGameState,
   RealtimeMessage,
   RealtimeTurnResults,
-} from "../../types/realtime-types";
+} from "@wilma/types/realtime-types";
 import { GameController } from "../../game-logic/GameController";
-import { TurnResults } from "../../types";
+import { TurnResults } from "@wilma/types";
 
 let server;
 const gameToClients: { [key: string]: ws.WebSocket[] } = {};

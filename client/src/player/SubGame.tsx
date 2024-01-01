@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
-import type { Causes, GameAction } from '../../../types/';
+import type { Causes, GameAction } from '@wilma/types/';
 import { useGameState } from '../main/useGameState';
 import { Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';

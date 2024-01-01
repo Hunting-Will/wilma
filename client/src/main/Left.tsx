@@ -7,7 +7,7 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 
-import { Player } from "../../../types";
+import { Player } from "@wilma/types";
 import { GameController } from "../../../game-logic/GameController";
 
 export function Left({ game }: { game: GameController }) {

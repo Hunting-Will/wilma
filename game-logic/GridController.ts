@@ -1,4 +1,4 @@
-import { GridCell, GameAction, Player, TurnResults } from '../types';
+import { GridCell, GameAction, Player, TurnResults } from '@wilma/types';
 
 const SEEDING_POINTS = 0.5;
 

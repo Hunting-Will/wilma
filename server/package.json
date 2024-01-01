@@ -1,5 +1,5 @@
 {
-    "name": "server",
+    "name": "@wilma/server",
     "version": "1.0.0",
     "scripts": {
         "start": "nodemon index.ts"
