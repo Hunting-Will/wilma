@@ -12,8 +12,7 @@
     "client",
     "server",
     "game-logic",
-    "types",
-    "e2e"
+    "types"
   ],
   "author": "",
   "license": "ISC",

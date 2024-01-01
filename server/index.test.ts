@@ -1,5 +1,5 @@
 const request = require('supertest');
-const { app } = require('@wilma/server');
+const { app } = require('./');
 
 
 test('Creart game', async () => {
