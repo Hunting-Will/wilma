@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 
 const router = new Router({ prefix: '/api' });
 
-export const app = new Koa();
+const app = new Koa();
 app.use(cors())
 app.use(bodypareser())
 
@@ -39,7 +39,6 @@ router.get('/createGame/:name', async (ctx) => {
 
   setGame(game.key, game);
 
-  ctx.status = 200;
   ctx.body = {
     message: 'Game created successfully',
     name,
@@ -127,7 +126,7 @@ app.on('error', (err, ctx) => {
 });
 
 const port = parseInt(process.env.PORT) || 3001
-const server = http.createServer(app.callback());
+export const server = http.createServer(app.callback());
 init(server)
 
 server.listen(port, () => {

@@ -1,8 +1,13 @@
 import Redis from 'ioredis'
+import redisMock from 'redis-mock'
 
 import { GameController } from "../game-logic/GameController";
 import { GridController } from '../game-logic/GridController';
-const redis = new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
+
+const redis =
+    process.env.NODE_ENV === 'test' ?
+        redisMock.createClient() :
+        new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
 
 export let games: Record<GameController['key'], GameController> = {};
 
