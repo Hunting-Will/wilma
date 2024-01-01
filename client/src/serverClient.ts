@@ -1,5 +1,5 @@
 import { GameController } from '../../game-logic/GameController';
-import { Game, GameAction } from '@wilma/types/index'
+import { GameAction } from '@wilma/types/index'
 
 const baseUrl = process.env.NODE_ENV === 'production' ? 'https://wilma-server.onrender.com' : 'http://localhost:3001';
 

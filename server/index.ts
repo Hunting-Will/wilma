@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import Koa from 'koa'
 import Router from '@koa/router';
 import bodypareser from 'koa-bodyparser';

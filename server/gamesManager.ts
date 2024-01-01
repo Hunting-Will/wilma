@@ -7,7 +7,7 @@ import { GridController } from '../game-logic/GridController';
 const redis =
     process.env.NODE_ENV === 'test' ?
         redisMock.createClient() :
-        new Redis('redis://:1aaiwdzIvNTH7TKlrehzCfgJI9SgiGmt@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798');
+        new Redis(`redis://:${process.env.REDIS_SECRET}@redis-11798.c323.us-east-1-2.ec2.cloud.redislabs.com:11798`);
 
 export let games: Record<GameController['key'], GameController> = {};
 

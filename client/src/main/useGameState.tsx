@@ -36,7 +36,7 @@ export const useGameState = (key: string) => {
         return (() => {
             clearInterval(interval)
         })
-    }, [])
+    }, [key])
 
     const handleData = (data: RealtimeServerResponse) => {
         if (isRealtimeGameState(data)) {
