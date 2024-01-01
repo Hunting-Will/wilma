@@ -38,6 +38,9 @@ beforeEach(async () => {
     key = data.gameId;
 })
 
+afterAll(async () => {
+    server.close()
+})
 test('Gets game', async () => {
     const response = await request(server)
         .get(`/api/game/${key}`)

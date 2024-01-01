@@ -4,8 +4,8 @@
   "description": "Nice game",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node server/index.ts"
+    "start": "ts-node server/index.ts",
+    "test": "yarn workspaces run test"
   },
   "private": true,
   "workspaces": [
