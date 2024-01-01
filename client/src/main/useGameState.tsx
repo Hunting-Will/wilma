@@ -6,7 +6,7 @@ import {
     RealtimeServerResponse,
     RealtimeTurnResults,
     RealtimeError,
-} from "../../../types/realtime-types";
+} from "@wilma/types/realtime-types";
 import { GameController } from "../../../game-logic/GameController";
 
 

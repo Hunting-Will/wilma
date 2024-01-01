@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { Player } from '../../../types';
+import { Player } from '@wilma/types';
 
 
 

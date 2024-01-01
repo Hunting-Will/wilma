@@ -7,9 +7,9 @@ import http from 'http';
 import { RealtimeServer, init } from './realtime-server/RealtimeServer';
 import { GameController } from '../game-logic/GameController';
 import { getGame, setGame } from './gamesManager'
-import { GameAction, GridCell } from '../types';
+import { GameAction, GridCell } from '@wilma/types';
 
-const { v4: uuidv4 } = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
 
 const router = new Router({ prefix: '/api' });
 
@@ -39,7 +39,6 @@ router.get('/createGame/:name', async (ctx) => {
 
   setGame(game.key, game);
 
-  ctx.status = 200;
   ctx.body = {
     message: 'Game created successfully',
     name,
@@ -127,7 +126,7 @@ app.on('error', (err, ctx) => {
 });
 
 const port = parseInt(process.env.PORT) || 3001
-const server = http.createServer(app.callback());
+export const server = http.createServer(app.callback());
 init(server)
 
 server.listen(port, () => {

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { Button, Typography } from "@mui/material";
 import { InfoContainer } from "../global-ui/InfoContainer";
-import { Player } from "../../../types";
+import { Player } from "@wilma/types";
 import { Right } from "./Right";
 import { useGameState } from "./useGameState";
 import { Left } from "./Left";
@@ -28,7 +28,7 @@ export function MainGame() {
     );
   }
 
-  const playersDone = gameState.gc.grid.reduce((acc,cell) => acc+cell.pendingActions.length, 0);
+  const playersDone = gameState.gc.grid.reduce((acc, cell) => acc + cell.pendingActions.length, 0);
 
   return (
     <Box display="flex" style={{ height: "100vh" }} justifyContent="space-around">

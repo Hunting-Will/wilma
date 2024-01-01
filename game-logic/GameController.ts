@@ -1,4 +1,4 @@
-import { GameAction, GameState, GridCell, Player, TurnResults } from "../types";
+import { GameAction, GameState, GridCell, Player, TurnResults } from "@wilma/types";
 import { GridController } from "./GridController";
 
 function generateGameCode() {
