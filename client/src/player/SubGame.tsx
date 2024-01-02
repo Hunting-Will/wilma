@@ -8,17 +8,15 @@ import { Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
 import { Lobby } from './Lobby';
-import poisonImg from '../assets/poison.svg';
-import sickleImg from '../assets/sickle.svg'
+import { actions } from '../global-ui';
+
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     margin: 10,
-    border: `1px solid ${isSelected ? 'lightgreen' : 'lightgray'}`,
+    borderRadius: 5,
+    border: `2px solid ${isSelected ? '#c0e1c0' : '#a2a2d8'}`,
     cursor: 'pointer'
 }));
-
-
-const actions: { action: GameAction, img: string }[] = [{ action: 'Seed', img: '' }, { action: 'Harvest', img: sickleImg }, { action: 'Poison', img: poisonImg }];
 
 
 const causes: Record<Causes, string> = {

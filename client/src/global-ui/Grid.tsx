@@ -2,12 +2,12 @@ import { Box, Typography, Zoom } from "@mui/material";
 import { GameAction, GridCell } from "@wilma/types";
 import { styled } from '@mui/system';
 import { useCallback, useEffect, useRef, useState } from "react";
+import { actions } from ".";
 
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${n}, 1fr)`,
     gap: '10px',
-    // backgroundColor: '#000'
 }));
 
 const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean }) => ({
@@ -18,7 +18,8 @@ const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean
     justifyContent: 'center',
     alignItems: 'center',
     cursor: 'pointer',
-    backgroundColor: isGrowing ? 'lightgreen' : 'lightblue',
+    backgroundColor: isGrowing ? '	#c0e1c0' : 'white',
+    border: '3px solid #a2a2d8',
     borderRadius: 10,
     position: 'relative'
 }));
@@ -48,7 +49,7 @@ const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number,
     return (
         <CellDiv onClick={onClick} n={n} isGrowing={isGrowing}>
             {children}
-            <Typography variant="h4">{v}</Typography>
+            {/* <Typography variant="h4">{v}</Typography> */}
             <Zoom in={animateScore}>
                 <Box position="absolute" left={3} top={3}>
                     <Typography variant="h4">{vChange && vChange > 0 ? '+' : ''}{vChange}</Typography>
@@ -67,12 +68,12 @@ type Props = {
 
 export const Grid = ({ grid, cellID, onSet, value }: Props) => {
     const n = Math.sqrt(grid?.length || 0)
-
+    const action = actions.find((a) => a.action === value)
     return (
         <GridContainer n={n}>
             {grid?.map((c) => (
                 <Cell key={c.ID} c={c} onClick={() => onSet?.(c.ID)} n={n} isGrowing={c.state.growing} v={c.state.cellValue}>
-                    <Box>{c.ID === cellID ? value : ''}</Box>
+                    {c.ID === cellID && <img alt={action?.action} src={action?.img}></img>}
                 </Cell>
             ))}
         </GridContainer>
