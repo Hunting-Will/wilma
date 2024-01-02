@@ -15,7 +15,7 @@ const fetch = async <T>(path: string) => {
     return JSON.parse(res.text) as T
 }
 
-const fetchPost = async <T>(path: string, data: object) => {
+const fetchPost = async <T>(path: string, data?: object) => {
     const res = await request(server)
         .post(path)
         .send(data)
@@ -30,10 +30,9 @@ let key;
 
 beforeEach(async () => {
     const name = 'Game'
-    const data = await fetch<Record<any, any>>(`/api/createGame/${name}`)
+    const data = await fetchPost<Record<any, any>>(`/api/createGame`, {})
 
     expect(data.gameId).not.toBeFalsy()
-    expect(data.name).toBe(name);
 
     key = data.gameId;
 })
