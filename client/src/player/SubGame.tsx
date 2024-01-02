@@ -8,16 +8,17 @@ import { Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
 import { Lobby } from './Lobby';
+import poisonImg from '../assets/poison.svg';
+import sickleImg from '../assets/sickle.svg'
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     margin: 10,
-    padding: 30,
     border: `1px solid ${isSelected ? 'lightgreen' : 'lightgray'}`,
     cursor: 'pointer'
 }));
 
 
-const actions: GameAction[] = ['Seed', 'Harvest', 'Poison'] as unknown as GameAction[]
+const actions: { action: GameAction, img: string }[] = [{ action: 'Seed', img: '' }, { action: 'Harvest', img: sickleImg }, { action: 'Poison', img: poisonImg }];
 
 
 const causes: Record<Causes, string> = {
@@ -98,14 +99,16 @@ export function SubGame() {
                     <Typography variant="h3"> {player?.Nickname}, {player?.Score}</Typography>
                 </Box>
                 <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} value={selectedAction}></Grid>
-                <Box display="grid" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
-                    {actions.map((action) =>
-                        <Item
-                            key={action}
-                            isSelected={selectedAction === action}
-                            onClick={() => setSelectedAction(action)}>
-                            {action}
-                        </Item>
+                <Box display="grid" width="100%" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
+                    {actions.map(({ action, img }) =>
+                        <Box display="flex" flexDirection="column" key={action}>
+                            <Typography textAlign="center" variant='h6'>{action}</Typography>
+                            <Item
+                                isSelected={selectedAction === action}
+                                onClick={() => setSelectedAction(action)}>
+                                <img src={img} alt={action}></img>
+                            </Item>
+                        </Box>
                     )}
                 </Box>
             </Box>

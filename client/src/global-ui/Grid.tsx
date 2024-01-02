@@ -48,7 +48,7 @@ const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number,
     return (
         <CellDiv onClick={onClick} n={n} isGrowing={isGrowing}>
             {children}
-            <Typography variant="h3">{v}</Typography>
+            <Typography variant="h4">{v}</Typography>
             <Zoom in={animateScore}>
                 <Box position="absolute" left={3} top={3}>
                     <Typography variant="h4">{vChange && vChange > 0 ? '+' : ''}{vChange}</Typography>
