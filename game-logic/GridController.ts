@@ -1,6 +1,7 @@
-import { GridCell, GameAction, Player, TurnResults } from '@wilma/types';
+import { GridCell, GameAction, Player, TurnResults, Item, Causes } from '@wilma/types';
 
-const SEEDING_POINTS = 0.5;
+export const SEEDING_POINTS = 0.5;
+export const GROW_POINTS = 1;
 
 function UUID() {
     return "very safe" + Math.random();
@@ -19,7 +20,8 @@ export class GridController {
             pendingActions: [],
             state: {
                 cellValue: 0,
-                growing: false
+                growing: false,
+                items: []
             }
         }
     }
@@ -37,12 +39,20 @@ export class GridController {
     }
 
     SimulateTurn(): TurnResults {
-        var results: TurnResults = {};
-        for (var cell of this.grid) {
-            var actionAmounts: Partial<Record<GameAction, number>> = {};
-            cell.pendingActions.forEach(a => {
-                actionAmounts[a.action] = (actionAmounts[a.action] ?? 0) + 1;
-            });
+        const results: TurnResults = {};
+        // const setResult = (playerId: Player['ID'], scoreChange: number, cause: Causes) => {
+        //     results[playerId] = {
+        //         cause,
+        //         scoreChange
+        //     }
+        // };
+
+        for (const cell of this.grid) {
+            const actionAmounts =
+                cell.pendingActions.reduce<Partial<Record<GameAction, number>>>((acc, a) => ({
+                    ...acc,
+                    [a.action]: (acc[a.action] ?? 0) + 1
+                }), {});
 
             for (var { action, player } of cell.pendingActions) {
                 results[player.ID] = results[player.ID] == undefined ? { scoreChange: 0, cause: "none" } : results[player.ID];
@@ -67,6 +77,13 @@ export class GridController {
                         results[player.ID].scoreChange += SEEDING_POINTS;
                         results[player.ID].cause = "seeded";
                         break;
+                    case 'PutMouse':
+                        cell.state.items.push({ type: 'Mouse', playerId: player.ID })
+                        break;
+                    case 'PutSnake':
+                        cell.state.items.push({ type: 'Snake', playerId: player.ID })
+                        break;
+
                 }
             }
             cell.pendingActions = [];
@@ -74,14 +91,33 @@ export class GridController {
             if ((actionAmounts['Harvest'] ?? 0) > 0) {
                 cell.state = {
                     cellValue: 0,
-                    growing: false
+                    growing: false,
+                    items: []
                 };
             }
             if (cell.state.growing == false && (actionAmounts['Seed'] ?? 0) > 0) {
                 cell.state.growing = true;
                 cell.state.cellValue += 1;
             } else if (cell.state.growing == true) {
-                cell.state.cellValue += 1;
+                cell.state.cellValue += GROW_POINTS;
+
+                for (const { type, playerId } of cell.state.items) {
+                    results[playerId] = results[playerId] == undefined ? { scoreChange: 0, cause: "none" } : results[playerId];
+
+                    if (type === 'Mouse') {
+                        cell.state.cellValue -= GROW_POINTS / 2;
+                        results[playerId].scoreChange += GROW_POINTS / 2;
+                        results[playerId].cause = 'mouse';
+                    }
+                }
+                // Destroy cell
+                if (cell.state.cellValue <= 0) {
+                    cell.state = {
+                        cellValue: 0,
+                        growing: false,
+                        items: []
+                    };
+                }
             }
         }
         return results;

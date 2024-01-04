@@ -21,7 +21,7 @@ const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => (
 
 const causes: Record<Causes, string> = {
     "harvest-poisoned": "harversed a poisoned tile",
-    "harvested": "harvesting a tile :>", "seeded": 'planting a seed', "poisoned-failed": 'failed poisoning :<', "none": 'missed your turn :<'
+    "harvested": "harvesting a tile :>", "seeded": 'planting a seed', "poisoned-failed": 'failed poisoning :<', "none": 'missed your turn :<', 'mouse': 'Mouse'
 }
 export function SubGame() {
     const { key } = useParams();

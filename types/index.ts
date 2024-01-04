@@ -17,7 +17,7 @@ export type PlayerAction = {
     action: GameAction
 }
 
-export type Causes = "harvest-poisoned" | "harvested" | "seeded" | "poisoned-failed" | "none"
+export type Causes = 'harvest-poisoned' | 'harvested' | 'seeded' | 'poisoned-failed' | 'none' | 'mouse'
 export type TurnResults = {
     [key: Player['ID']]: {
         scoreChange: number
@@ -28,12 +28,14 @@ export type TurnResults = {
 export type GridCell = {
     pendingActions: PlayerAction[],
     state: CellState,
-    ID: string
+    ID: string,
+
 };
 
 export type CellState = {
     cellValue: number,
-    growing: boolean
+    growing: boolean,
+    items: Item[]
 }
 
 export type GameAction =
@@ -42,3 +44,9 @@ export type GameAction =
     'Seed' |
     'Harvest' |
     'Poison'
+
+export type ItemTypes = 'Mouse' | 'Snake'
+export type Item = {
+    type: ItemTypes,
+    playerId: string
+}

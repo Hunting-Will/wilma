@@ -40,7 +40,7 @@ export function MainGame() {
         alignItems="center"
         paddingBottom={10}
       >
-        <Box minHeight="15%">
+        <Box minHeight="12%">
           {gameState?.state === "simulating" ? (
             <Box>
               <Button size="large" variant="outlined" onClick={handleStart}>

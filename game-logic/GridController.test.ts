@@ -1,5 +1,5 @@
 import { Player, PlayerAction } from '@wilma/types';
-import { GridController } from './GridController';
+import { GROW_POINTS, GridController, SEEDING_POINTS } from './GridController';
 
 describe("grid controller", () => {
     let gc: GridController;
@@ -44,7 +44,7 @@ describe("grid controller", () => {
         it('gives points for seeding', () => {
             gc.SetPlayerAction(samplePlayer1, "Seed", gc.grid[0].ID);
             const results = gc.SimulateTurn();
-            expect(results[samplePlayer1.ID].scoreChange).toBe(0.5);
+            expect(results[samplePlayer1.ID].scoreChange).toBe(SEEDING_POINTS);
         });
 
         it('grows seeds and gives proper score on harvest to all harvesting players', () => {
@@ -74,7 +74,8 @@ describe("grid controller", () => {
         it('stops growing after harvest', () => {
             gc.SetPlayerAction(samplePlayer1, "Seed", gc.grid[0].ID);
             gc.SimulateTurn();
-            expect(gc.grid[0].state.cellValue).toEqual(1);
+            expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS);
+
             gc.SetPlayerAction(samplePlayer1, "Harvest", gc.grid[0].ID);
             const results = gc.SimulateTurn();
             gc.SimulateTurn();
@@ -122,4 +123,32 @@ describe("grid controller", () => {
             expect(results[samplePlayer2.ID].scoreChange).toEqual(-0.50);
         });
     });
+
+    describe("items simulations", () => {
+        it('mouse gives points to player each turn', () => {
+            gc.SetPlayerAction(samplePlayer1, 'Seed', gc.grid[0].ID);
+            gc.SimulateTurn();
+            gc.SimulateTurn();
+            expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS * 2)
+
+            gc.SetPlayerAction(samplePlayer1, 'PutMouse', gc.grid[0].ID);
+            let results = gc.SimulateTurn();
+            expect(results[samplePlayer1.ID].scoreChange).toBe(GROW_POINTS / 2);
+
+            gc.SetPlayerAction(samplePlayer1, 'Seed', gc.grid[1].ID);
+            results = gc.SimulateTurn();
+            expect(results[samplePlayer1.ID].scoreChange).toBe(SEEDING_POINTS + (GROW_POINTS / 2));
+        });
+
+        it('mouse reduces cell value by half of growing', () => {
+            gc.SetPlayerAction(samplePlayer1, 'Seed', gc.grid[0].ID);
+            gc.SimulateTurn();
+            gc.SimulateTurn();
+            expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS * 2)
+
+            gc.SetPlayerAction(samplePlayer1, 'PutMouse', gc.grid[0].ID);
+            let results = gc.SimulateTurn();
+            expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS * 2.5)
+        });
+    })
 })
