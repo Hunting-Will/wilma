@@ -12,7 +12,7 @@ import { actions } from '../global-ui';
 
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
-    margin: 10,
+    margin: 2,
     borderRadius: 5,
     border: `2px solid ${isSelected ? '#c0e1c0' : '#a2a2d8'}`,
     cursor: 'pointer'
@@ -98,7 +98,6 @@ export function SubGame() {
                 <Box display="grid" width="100%" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
                     {actions.map(({ action, img }) =>
                         <Box display="flex" flexDirection="column" key={action}>
-                            <Typography textAlign="center" variant='h6'>{action}</Typography>
                             <Item
                                 isSelected={selectedAction === action}
                                 onClick={() => setSelectedAction(action)}>
