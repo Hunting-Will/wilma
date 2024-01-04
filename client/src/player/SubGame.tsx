@@ -65,17 +65,15 @@ export function SubGame() {
     }
     if (gameState?.state === 'simulating') {
         const result = turnResults?.results[playerId]
-        if (!result) {
-            return <Box></Box>
-        }
+
         return <Box>
             <Typography textAlign="center" variant="h3">
                 Turn concluded
             </Typography>
-            <Typography textAlign="center" variant="h4">
+            {result && <Typography textAlign="center" variant="h4">
                 You got {result.scoreChange} points
-                for {causes[result.cause]}
-            </Typography>
+                for {causes[result.cause] || "you did nothing"}
+            </Typography>}
         </Box>
     }
 

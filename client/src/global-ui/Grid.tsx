@@ -1,4 +1,4 @@
-import { Box, Typography, Zoom } from "@mui/material";
+import { Box, Slide, Typography, Zoom } from "@mui/material";
 import { GameAction, GridCell } from "@wilma/types";
 import { styled } from '@mui/system';
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -49,12 +49,14 @@ const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number,
     return (
         <CellDiv onClick={onClick} n={n} isGrowing={isGrowing}>
             {children}
-            {/* <Typography variant="h4">{v}</Typography> */}
-            <Zoom in={animateScore}>
-                <Box position="absolute" left={3} top={3}>
-                    <Typography variant="h4">{vChange && vChange > 0 ? '+' : ''}{vChange}</Typography>
-                </Box>
-            </Zoom>
+            <Box position="absolute" left={3} top={3}><Typography variant="h4">{v}</Typography></Box>
+            <Slide direction="down" in={animateScore}>
+                <Zoom in={animateScore}>
+                    <Box position="absolute" left={-5} top={-35}>
+                        <Typography variant="h4">{vChange && vChange > 0 ? '+' : ''}{vChange}</Typography>
+                    </Box>
+                </Zoom>
+            </Slide>
         </CellDiv>
     )
 }

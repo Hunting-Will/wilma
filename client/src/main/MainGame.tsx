@@ -40,25 +40,27 @@ export function MainGame() {
         alignItems="center"
         paddingBottom={10}
       >
-        {gameState?.state === "simulating" ? (
-          <Box>
-            <Button size="large" variant="outlined" onClick={handleStart}>
-              Next Turn
-            </Button>
-          </Box>
-        ) : (
-          <Box display="flex" alignItems="center" flexDirection="column">
-
-            <Typography variant="h5">Each player should select it's next action</Typography>
-            <Box display="flex">
-              <Typography variant="h6">{time}s  {playersDone}/{gameState.players.length} players chose </Typography>
+        <Box minHeight="15%">
+          {gameState?.state === "simulating" ? (
+            <Box>
+              <Button size="large" variant="outlined" onClick={handleStart}>
+                Next Turn
+              </Button>
             </Box>
+          ) : (
+            <Box display="flex" alignItems="center" flexDirection="column">
 
-            <Button variant="outlined" onClick={handleSimulateTurn}>
-              End Turn
-            </Button>
-          </Box>
-        )}
+              <Typography variant="h5">Each player should select it's next action</Typography>
+              <Box display="flex">
+                <Typography variant="h6">{time}s  {playersDone}/{gameState.players.length} players chose </Typography>
+              </Box>
+
+              <Button variant="outlined" onClick={handleSimulateTurn}>
+                End Turn
+              </Button>
+            </Box>
+          )}
+        </Box>
         <Grid grid={gameState.gc.grid} />
       </Box>
       <Right players={gameState.players} />
