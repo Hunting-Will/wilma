@@ -7,14 +7,17 @@ import Avatar from "@mui/material/Avatar";
 
 import { Player } from "@wilma/types";
 import { GameController } from "../../../game-logic/GameController";
+import { Box } from "@mui/material";
 
 export function Left({ game }: { game: GameController }) {
   return (
-    <List style={{ overflow: "auto" }}>
-      {game.players.map((p) => (
-        <PlayerCard key={p.ID} player={p} />
-      ))}
-    </List>
+    <Box alignSelf="start">
+      <List style={{ overflow: "auto" }}>
+        {game.players.map((p) => (
+          <PlayerCard key={p.ID} player={p} />
+        ))}
+      </List>
+    </Box>
   );
 }
 
