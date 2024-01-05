@@ -61,7 +61,7 @@ export function MainGame() {
             </Box>
           )}
         </Box>
-        <Grid grid={gameState.gc.grid} />
+        <Grid grid={gameState.gc.grid} isMain={true} />
       </Box>
       <Right players={gameState.players} />
     </Box>

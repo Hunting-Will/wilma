@@ -94,7 +94,7 @@ export function SubGame() {
                 <Box>
                     <Typography variant="h3"> {player?.Nickname}, {player?.Score}</Typography>
                 </Box>
-                <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} value={selectedAction}></Grid>
+                <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} selectedAction={selectedAction} isMain={false}></Grid>
                 <Box display="grid" width="100%" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
                     {actions.map(({ action, img }) =>
                         <Box display="flex" flexDirection="column" key={action}>

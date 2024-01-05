@@ -7,12 +7,12 @@ import { actions } from ".";
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
     display: 'grid',
     gridTemplateColumns: `repeat(${n}, 1fr)`,
-    gap: '10px',
+    gap: '5px',
 }));
 
 const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean }) => ({
-    height: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
-    width: `min(calc(65vw / ${n}), calc(65vh / ${n}))`,
+    height: `min(calc(60vw / ${n}), calc(60vh / ${n}))`,
+    width: `min(calc(60vw / ${n}), calc(60vh / ${n}))`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -21,7 +21,12 @@ const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean
     backgroundColor: isGrowing ? '	#c0e1c0' : 'white',
     border: '3px solid #a2a2d8',
     borderRadius: 10,
-    position: 'relative'
+    position: 'relative',
+    '@media(max-width: 768px)': {
+        height: `min(calc(85vw / ${n}), calc(85vh / ${n}))`, // Example adjustment
+        width: `min(calc(85vw / ${n}), calc(85vh / ${n}))`  // Example adjustment
+        // Add other style adjustments for the media query here
+    }
 }));
 
 const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number, isGrowing: boolean, children: React.ReactNode, onClick: () => void, c: GridCell }) => {
@@ -65,12 +70,14 @@ type Props = {
     grid?: GridCell[],
     cellID?: string,
     onSet?: (cellId: string) => void,
-    value?: GameAction | undefined
+    selectedAction?: GameAction,
+    isMain: boolean
 }
 
-export const Grid = ({ grid, cellID, onSet, value }: Props) => {
+export const Grid = ({ grid, cellID, onSet, selectedAction, isMain }: Props) => {
     const n = Math.sqrt(grid?.length || 0)
-    const action = actions.find((a) => a.action === value)
+    const action = actions.find((a) => a.action === selectedAction)
+
     return (
         <GridContainer n={n}>
             {grid?.map((c) => (
