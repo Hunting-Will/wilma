@@ -31,40 +31,33 @@ export function MainGame() {
   const playersDone = gameState.gc.grid.reduce((acc, cell) => acc + cell.pendingActions.length, 0);
 
   return (
-    <Box display="flex" style={{ height: "100vh" }} justifyContent="space-around">
+    <Box display="grid" gridTemplateColumns="2fr 8fr 2fr" height="90%" alignItems="center" justifyItems="center" padding={4}>
       <Left game={gameState} />
-      <Box
-        flexDirection="column"
-        display="flex"
-        justifyContent="space-around"
-        alignItems="center"
-        paddingBottom={10}
-      >
-        <Box height="10%">
-          {gameState?.state === "simulating" ? (
-            <Box>
-              <Button size="large" variant="outlined" onClick={handleStart}>
-                Next Turn
-              </Button>
-            </Box>
-          ) : (
-            <Box display="flex" alignItems="center" flexDirection="column">
-
-              <Typography variant="h5">Each player should select it's next action</Typography>
-              <Box display="flex">
-                <Typography variant="h6">{time}s  {playersDone}/{gameState.players.length} players chose </Typography>
-              </Box>
-
-              <Button variant="outlined" onClick={handleSimulateTurn}>
-                End Turn
-              </Button>
-            </Box>
-          )}
-        </Box>
+      <Box maxWidth="500px" width='100%'>
         <Grid grid={gameState.gc.grid} isMain={true} />
       </Box>
-      <Right players={gameState.players} />
-    </Box>
+      <Box display="flex" alignItems="center">
+        {gameState?.state === "simulating" ? (
+          <Box>
+            <Button size="large" variant="outlined" onClick={handleStart}>
+              Next Turn
+            </Button>
+          </Box>
+        ) : (
+          <Box display="flex" alignItems="center" flexDirection="column">
+
+            <Typography variant="h5">Each player should select it's next action</Typography>
+            <Box display="flex">
+              <Typography variant="h6">{time}s  {playersDone}/{gameState.players.length} players chose </Typography>
+            </Box>
+
+            <Button variant="outlined" onClick={handleSimulateTurn}>
+              End Turn
+            </Button>
+          </Box>
+        )}
+      </Box>
+    </Box >
   );
 }
 

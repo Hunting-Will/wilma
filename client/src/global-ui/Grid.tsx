@@ -6,13 +6,14 @@ import { actions } from ".";
 
 const GridContainer = styled('div')(({ n }: { n: number }) => ({
     display: 'grid',
+    aspectRatio: 1,
     gridTemplateColumns: `repeat(${n}, 1fr)`,
+    gridTemplateRows: `repeat(${n}, 1fr)`,
     gap: '5px',
+    width: '100%'
 }));
 
 const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean }) => ({
-    height: `min(calc(60vw / ${n}), calc(60vh / ${n}))`,
-    width: `min(calc(60vw / ${n}), calc(60vh / ${n}))`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -22,11 +23,6 @@ const CellDiv = styled('div')(({ n, isGrowing }: { n: number, isGrowing: boolean
     border: '3px solid #a2a2d8',
     borderRadius: 10,
     position: 'relative',
-    '@media(max-width: 768px)': {
-        height: `min(calc(85vw / ${n}), calc(85vh / ${n}))`, // Example adjustment
-        width: `min(calc(85vw / ${n}), calc(85vh / ${n}))`  // Example adjustment
-        // Add other style adjustments for the media query here
-    }
 }));
 
 const Cell = ({ v, n, isGrowing, children, onClick, c }: { v: number, n: number, isGrowing: boolean, children: React.ReactNode, onClick: () => void, c: GridCell }) => {

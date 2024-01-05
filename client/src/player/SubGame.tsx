@@ -79,34 +79,30 @@ export function SubGame() {
 
     return (
         <Box
-            display="flex"
-            justifyContent="center"
+            display="grid"
+            gridTemplateRows="auto 1fr auto"
             alignItems="center"
-            height="99vh"
-            padding="0 15px 0 15px">
-            <Box
-                flexDirection="column"
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-                height="90vh"
-            >
-                <Box>
-                    <Typography variant="h3"> {player?.Nickname}, {player?.Score}</Typography>
-                </Box>
-                <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} selectedAction={selectedAction} isMain={false}></Grid>
-                <Box display="grid" width="100%" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
-                    {actions.map(({ action, img }) =>
-                        <Box display="flex" flexDirection="column" key={action}>
-                            <Item
-                                isSelected={selectedAction === action}
-                                onClick={() => setSelectedAction(action)}>
-                                <img src={img} alt={action}></img>
-                            </Item>
-                        </Box>
-                    )}
-                </Box>
+            height="100%"
+            width="100%"
+            maxWidth="500px"
+            padding={1}
+
+        >
+            <Box>
+                <Typography variant="h3"> {player?.Nickname}, {player?.Score}</Typography>
             </Box>
-        </Box >
+            <Grid grid={gameState?.gc.grid} onSet={handleSetGrid} cellID={cellID} selectedAction={selectedAction} isMain={false}></Grid>
+            <Box display="grid" width="100%" gridTemplateColumns={`repeat(${actions.length}, 1fr)`}>
+                {actions.map(({ action, img }) =>
+                    <Box display="flex" flexDirection="column" key={action}>
+                        <Item
+                            isSelected={selectedAction === action}
+                            onClick={() => setSelectedAction(action)}>
+                            <img src={img} alt={action}></img>
+                        </Item>
+                    </Box>
+                )}
+            </Box>
+        </Box>
     );
 }
