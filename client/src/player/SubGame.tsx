@@ -4,12 +4,13 @@ import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
 import type { Causes, GameAction } from '@wilma/types/';
 import { useGameState } from '../main/useGameState';
-import { List, ListItem, ListItemText, Typography } from '@mui/material';
+import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
 import { Lobby } from './Lobby';
 import { actions } from '../global-ui';
-
+import LoyaltyOutlinedIcon from '@mui/icons-material/LoyaltyOutlined';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 
 const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => ({
     margin: 2,
@@ -71,9 +72,16 @@ export function SubGame() {
                 Turn concluded
             </Typography>
             <List>
-                {results && results.map(result => <ListItem><ListItemText primary={`You got ${result.scoreChange} points
-                    for ${causes[result.cause] || "you did nothing"}`}>
-                </ListItemText></ListItem>
+                {results && results.map(({ scoreChange, cause }) => <ListItem>
+                    <ListItemIcon>
+                        {scoreChange > 0 ? <LoyaltyOutlinedIcon /> : <ThumbDownOffAltIcon />}
+                    </ListItemIcon>
+                    <ListItemText primary={
+                        `You got ${scoreChange} points
+                        for ${causes[cause] || "you did nothing"}`
+                    }>
+                    </ListItemText>
+                </ListItem>
                 )}
             </List>
         </Box >
