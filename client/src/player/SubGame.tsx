@@ -4,7 +4,7 @@ import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
 import type { Causes, GameAction } from '@wilma/types/';
 import { useGameState } from '../main/useGameState';
-import { Typography } from '@mui/material';
+import { List, ListItem, ListItemText, Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
 import { setAction } from '../serverClient';
 import { Lobby } from './Lobby';
@@ -64,17 +64,19 @@ export function SubGame() {
         return <Lobby />
     }
     if (gameState?.state === 'simulating') {
-        const result = turnResults?.results[playerId]
+        const results = turnResults?.results[playerId]
 
         return <Box>
             <Typography textAlign="center" variant="h3">
                 Turn concluded
             </Typography>
-            {result && <Typography textAlign="center" variant="h4">
-                You got {result.scoreChange} points
-                for {causes[result.cause] || "you did nothing"}
-            </Typography>}
-        </Box>
+            <List>
+                {results && results.map(result => <ListItem><ListItemText primary={`You got ${result.scoreChange} points
+                    for ${causes[result.cause] || "you did nothing"}`}>
+                </ListItemText></ListItem>
+                )}
+            </List>
+        </Box >
     }
 
     return (
