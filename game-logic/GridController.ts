@@ -39,7 +39,6 @@ export class GridController {
         // Check if there is already an action by the player and remove it
         const cellWithPlayer = this.grid.find(c => c.pendingActions.map(pa => pa.player.ID).includes(player.ID))
         if (cellWithPlayer) {
-            console.log(cellWithPlayer)
             cellWithPlayer.pendingActions = cellWithPlayer.pendingActions.filter(pa => pa.player.ID !== player.ID)
         }
 
@@ -63,7 +62,6 @@ export class GridController {
     }
 
     handlePoison: ActionHandler = ({ player, cell, actionAmounts }) => {
-        console.log(JSON.stringify(actionAmounts))
         if ((actionAmounts['Harvest'] || 0) === 0) {
             this.results[player.ID].push({
                 scoreChange: -cell.state.cellValue / 2,
