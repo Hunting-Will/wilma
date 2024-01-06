@@ -22,7 +22,7 @@ export type TurnResults = {
     [key: Player['ID']]: {
         scoreChange: number
         cause: Causes
-    }
+    }[]
 }
 
 export type GridCell = {

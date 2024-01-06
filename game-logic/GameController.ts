@@ -46,10 +46,10 @@ export class GameController {
         for (const playerID of Object.keys(results)) {
 
             const player = this.players.find(p => p.ID === playerID)
-            player && (player.Score += results[playerID].scoreChange);
+            const scoreChangeSum = results[playerID].reduce((sum, { scoreChange }) => sum + scoreChange, 0)
+            player && (player.Score += scoreChangeSum);
         }
-        console.log('simulated')
-        console.log(JSON.stringify(results))
+
         return results;
     }
 }

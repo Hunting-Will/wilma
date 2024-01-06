@@ -33,7 +33,7 @@ export function MainGame() {
   return (
     <Box display="grid" gridTemplateColumns="2fr 8fr 2fr" height="90%" alignItems="center" justifyItems="center" padding={4}>
       <Left game={gameState} />
-      <Box maxWidth="500px" width='100%'>
+      <Box maxWidth="700px" minWidth="400px" width='100%'>
         <Grid grid={gameState.gc.grid} isMain={true} />
       </Box>
       <Box display="flex" alignItems="center">
