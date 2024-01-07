@@ -1,5 +1,5 @@
 import { Player, PlayerAction } from '@wilma/types';
-import { GROW_POINTS, GridController, MOUSE_POINTS, SEEDING_POINTS } from './GridController';
+import { GROW_POINTS, GridController, MOUSE_POINTS, SEEDING_POINTS, SNAKE_POINTS } from './GridController';
 
 describe("grid controller", () => {
     let gc: GridController;
@@ -150,6 +150,22 @@ describe("grid controller", () => {
             gc.SetPlayerAction(samplePlayer1, 'PutMouse', gc.grid[0].ID);
             let results = gc.SimulateTurn();
             expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS * 3 - MOUSE_POINTS)
+        });
+
+        it('snakes eats all mouses', () => {
+            gc.SetPlayerAction(samplePlayer1, 'Seed', gc.grid[0].ID);
+            gc.SimulateTurn();
+            gc.SimulateTurn();
+            expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS * 2)
+
+            gc.SetPlayerAction(samplePlayer1, 'PutMouse', gc.grid[0].ID);
+            gc.SetPlayerAction(samplePlayer2, 'PutMouse', gc.grid[0].ID);
+            gc.SetPlayerAction(samplePlayer3, 'PutSnake', gc.grid[0].ID);
+            let results = gc.SimulateTurn();
+
+            expect(results[samplePlayer3.ID][0].scoreChange).toBe(SNAKE_POINTS * 2);
+            expect(gc.grid[0].state.cellValue).toEqual(GROW_POINTS * 3)
+            expect(gc.grid[0].state.items.find(({ type }) => type === 'Mouse')).toBeUndefined()
         });
     })
 })

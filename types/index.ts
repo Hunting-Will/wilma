@@ -17,11 +17,14 @@ export type PlayerAction = {
     action: GameAction
 }
 
-export type Causes = 'harvest-poisoned' | 'harvested' | 'seeded' | 'poisoned-failed' | 'none' | 'mouse'
+export type Cause = 'harvest-poisoned' | 'harvested' |
+    'seeded' | 'poisoned-failed' | 'none' |
+    'mouse' | 'snake-ate-mouse'
+
 export type TurnResults = {
     [key: Player['ID']]: {
         scoreChange: number
-        cause: Causes
+        cause: Cause
     }[]
 }
 
@@ -45,8 +48,8 @@ export type GameAction =
     'Harvest' |
     'Poison'
 
-export type ItemTypes = 'Mouse' | 'Snake'
+export type ItemType = 'Mouse' | 'Snake'
 export type Item = {
-    type: ItemTypes,
+    type: ItemType,
     playerId: string
 }

@@ -1,8 +1,10 @@
-import { GridCell, GameAction, Player, TurnResults, Item, Causes, PlayerAction } from '@wilma/types';
+import { GridCell, GameAction, Player, TurnResults, Item, Cause, PlayerAction, ItemType } from '@wilma/types';
 
 export const SEEDING_POINTS = 0.5;
 export const GROW_POINTS = 1;
 export const MOUSE_POINTS = GROW_POINTS / 2;
+export const SNAKE_POINTS = GROW_POINTS / 2;
+
 function UUID() {
     return "very safe" + Math.random();
 }
@@ -123,6 +125,9 @@ export class GridController {
             [a.action]: (acc[a.action] ?? 0) + 1
         }), {});
 
+    addResult = (playerId: Player['ID'], scoreChange: number, cause: Cause) => {
+        (this.results[playerId] = this.results[playerId] || []).push({ scoreChange, cause });
+    }
     updateCellState = (cell: GridCell, actionAmounts: Partial<Record<GameAction, number>>) => {
         // Reset cell if harvested
         if (actionAmounts['Harvest'] ?? 0 > 0) {
@@ -142,18 +147,18 @@ export class GridController {
         }
 
         // Handle items effect
-        for (const { type, playerId } of cell.state.items) {
-            this.results[playerId] = []
-            switch (type) {
-                case 'Mouse':
-                    const mouseEffect = GROW_POINTS / 2;
-                    cell.state.cellValue -= mouseEffect; // Decrease cell value due to mouse
+        const itemsByName = cell.state.items.reduce<Partial<Record<ItemType, Item[]>>>((acc, item) =>
+            ((acc[item.type] = acc[item.type] ?? []).push(item), acc)
+            , {})
+        const snakeCount = itemsByName['Snake']?.length || 0
+        const mouseCount = itemsByName['Mouse']?.length || 0
 
-                    this.results[playerId].push({ scoreChange: mouseEffect, cause: 'mouse' })
-                    break;
-
-                // Handle other items like 'Snake' 
+        if (snakeCount) {
+            if (mouseCount > 0) {
+                this.handleSnakeEatsMice(cell, itemsByName['Snake'], itemsByName['Mouse'])
             }
+        } else if (mouseCount) {
+            this.handleMouse(cell, itemsByName['Mouse'])
         }
 
         // Check if cell value has dropped to zero or below
@@ -164,5 +169,25 @@ export class GridController {
                 items: []
             };
         }
+    }
+
+    removeAllItemsOfType = (cell: GridCell, itemType: ItemType) => {
+        cell.state.items = cell.state.items.filter(({ type }) => type !== itemType);
+    }
+
+    handleSnakeEatsMice = (cell: GridCell, snakeItems?: Item[], mouseItems?: Item[]) => {
+        const snakeCount = snakeItems?.length || 0
+        const mouseCount = mouseItems?.length || 0
+        snakeItems?.forEach(({ playerId }) =>
+            this.addResult(playerId, (SNAKE_POINTS * mouseCount) / snakeCount, 'mouse'))
+
+        this.removeAllItemsOfType(cell, 'Mouse')
+    }
+
+    handleMouse = (cell: GridCell, miceItems?: Item[]) => {
+        miceItems?.forEach(({ playerId }) => {
+            cell.state.cellValue -= MOUSE_POINTS;
+            this.addResult(playerId, MOUSE_POINTS, 'mouse');
+        });
     }
 };
