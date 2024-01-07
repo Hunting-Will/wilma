@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { styled } from '@mui/system';
 import Box from "@mui/material/Box";
-import type { Causes, GameAction } from '@wilma/types/';
+import type { Cause, GameAction } from '@wilma/types/';
 import { useGameState } from '../main/useGameState';
 import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import { Grid } from '../global-ui/Grid';
@@ -20,9 +20,11 @@ const Item = styled('div')<{ isSelected: boolean }>(({ theme, isSelected }) => (
 }));
 
 
-const causes: Record<Causes, string> = {
+const causes: Record<Cause, string> = {
     "harvest-poisoned": "harversed a poisoned tile",
-    "harvested": "harvesting a tile :>", "seeded": 'planting a seed', "poisoned-failed": 'failed poisoning :<', "none": 'missed your turn :<', 'mouse': 'Mouse'
+    "harvested": "harvesting a tile :>", "seeded": 'planting a seed', "poisoned-failed": 'failed poisoning :<', "none": 'missed your turn :<',
+    'mouse': 'having a mouse on a tile',
+    'snake-ate-mouse': 'placing a snake eating mice'
 }
 export function SubGame() {
     const { key } = useParams();
